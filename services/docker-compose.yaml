@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+
+  artemis:
+    container_name: artemis # Mantener el nombre del servicio para Karavan Dev Services
+    image: apache/activemq-artemis:2.37.0
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+      - "5672:5672"
+    environment:
+      ARTEMIS_USER: artemis
+      ARTEMIS_PASSWORD: artemis
+      ANONYMOUS_LOGIN: false
+    networks: # Es buena práctica definir redes explícitamente, aunque Docker Compose cree una por defecto.
+      - dev-services-network # Nombre de red para los servicios de desarrollo
+
+  kafka:
+    container_name: kafka # Mantener el nombre del servicio para Karavan Dev Services
+    image: apache/kafka:3.7.0
+    ports:
+      - 9092:9092
+    environment: # Añadir algunas variables básicas para que Kafka inicie como un solo broker
+      KAFKA_NODE_ID: 0
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '0@kafka:9093'
+      KAFKA_LISTENERS: 'PLAINTEXT://:9092,CONTROLLER://:9093'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+    networks:
+      - dev-services-network
+
+  postgres:
+    container_name: postgres # Mantener el nombre del servicio para Karavan Dev Services
+    image: postgres:16.2
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=karavan # Puedes especificar una DB por defecto aquí
+    ports:
+      - '5432:5432'
+    volumes:
+      # Si tienes un archivo postgres-init-db.sql en la misma carpeta que este docker-compose.yaml
+      # y quieres que se ejecute al primer inicio de PostgreSQL, descomenta la siguiente línea:
+      # - ./postgres-init-db.sql:/docker-entrypoint-initdb.d/init.sql
+      postgres_data:/var/lib/postgresql/data # Para persistir los datos
+    networks:
+      - dev-services-network
+
+  adminer:
+    container_name: adminer # Mantener el nombre del servicio para Karavan Dev Services
+    image: adminer:4.8.1-standalone
+    restart: always
+    ports:
+      - 8080:8080 # Puedes cambiar este puerto si choca con otro servicio (ej. 8088:8080)
+    networks:
+      - dev-services-network
+
+  greenmail:
+    container_name: greenmail # Mantener el nombre del servicio para Karavan Dev Services
+    image: greenmail/standalone:2.0.0
+    ports:
+      - "3025:3025" # SMTP
+      - "3110:3110" # POP3
+      - "3143:3143" # IMAP
+      - "3465:3465"
+      - "3993:3993"
+      - "3995:3995"
+      - "9980:8080" # Web UI de GreenMail
+    networks:
+      - dev-services-network
+
+  # --- INICIO DE SERVICIOS AÑADIDOS ---
+
+  mongodb:
+    container_name: mongodb # Nombre del servicio para Karavan Dev Services
+    image: mongo:6.0
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      # Puedes añadir MONGO_INITDB_DATABASE si quieres una base de datos por defecto al iniciar:
+      # - MONGO_INITDB_DATABASE=mydatabase
+    ports:
+      - "27017:27017" # Puerto por defecto de MongoDB. Asegúrate de que no haya conflicto local.
+    volumes:
+      mongodb_data:/data/db # Para persistir los datos de MongoDB
+    networks:
+      - dev-services-network
+
+  roundcube:
+    container_name: roundcube # Nombre del servicio para Karavan Dev Services
+    image: roundcube/roundcubemail:latest
+    depends_on:
+      - greenmail # Asegura que GreenMail inicie primero
+    ports:
+      - 8000:80 # Puerto para acceder a la interfaz web de Roundcube
+    environment:
+      - ROUNDCUBEMAIL_DEFAULT_HOST=greenmail # Conecta a GreenMail por el nombre del servicio
+      - ROUNDCUBEMAIL_DEFAULT_PORT=3143 # Puerto IMAP de GreenMail
+      - ROUNDCUBEMAIL_SMTP_SERVER=greenmail # Conecta a GreenMail para SMTP
+      - ROUNDCUBEMAIL_SMTP_PORT=3025 # Puerto SMTP de GreenMail
+    networks:
+      - dev-services-network
+
+  # --- FIN DE SERVICIOS AÑADIDOS ---
+
+volumes:
+  postgres_data:
+  mongodb_data: # Define el volumen para MongoDB para persistencia
+
+networks:
+  dev-services-network:
+    name: karavan-dev-services-network # Nombre explícito de la red para los servicios de desarrollo
