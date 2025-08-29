@@ -1,0 +1,8 @@
+services:
+  pruebapi:
+    image: pruebapi
+    restart: always
+    ports:
+      - "8094:8080"
+    networks:
+      - karavan
