@@ -1,8 +1,9 @@
 services:
   holamundo:
-    image: holamundo
-    restart: always
-    ports:
-      - "8093:8080"
+    container_name: holamundo
+    image: localhost:5555/karavan/holamundo:latest
     networks:
-      - karavan
+    - karavan
+    ports:
+    - 8093:8080
+    restart: always
