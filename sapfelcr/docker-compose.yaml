@@ -1,0 +1,8 @@
+services:
+  sapfelcr:
+    image: sapfelcr
+    restart: always
+    ports:
+      - "8097:8080"
+    networks:
+      - karavan
