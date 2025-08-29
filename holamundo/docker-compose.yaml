@@ -1,0 +1,8 @@
+services:
+  holamundo:
+    image: holamundo
+    restart: always
+    ports:
+      - "8093:8080"
+    networks:
+      - karavan
