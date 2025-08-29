@@ -1,3 +1,9 @@
+- rest:
+    id: rest-a048
+    post:
+      - id: post-efb2
+        path: /prueba
+        to: direct:api
 - route:
     id: route-4aa9
     nodePrefixId: route-f87
@@ -11,9 +17,3 @@
             id: log-de1a
             message: ${body}
             loggingLevel: INFO
-- rest:
-    id: rest-a048
-    post:
-      - id: post-efb2
-        path: /prueba
-        to: direct:api
