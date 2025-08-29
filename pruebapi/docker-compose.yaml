@@ -1,8 +1,9 @@
 services:
   pruebapi:
-    image: pruebapi
-    restart: always
-    ports:
-      - "8094:8080"
+    container_name: pruebapi
+    image: localhost:5555/karavan/pruebapi:latest
     networks:
-      - karavan
+    - karavan
+    ports:
+    - 8094:8080
+    restart: always
