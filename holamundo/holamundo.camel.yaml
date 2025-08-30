@@ -6,6 +6,7 @@
       uri: timer
       parameters:
         timerName: Holamundo
+        delay: "10000"
       steps:
         - setBody:
             id: setBody-c665
