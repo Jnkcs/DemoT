@@ -1,12 +1,19 @@
+- rest:
+    id: rest-077b
+    post:
+      - id: post-8b0a
+        path: /prueba
+        to: direct:api
 - route:
-    id: route-baef
-    nodePrefixId: route-44d
+    id: route-5c57
+    nodePrefixId: route-824
     from:
-      id: from-1347
-      uri: platform-http
+      id: from-752c
+      uri: direct
       parameters:
-        path: /api
+        name: api
       steps:
         - log:
-            id: log-f625
+            id: log-0cb1
             message: ${body}
+            loggingLevel: INFO
