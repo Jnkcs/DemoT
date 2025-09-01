@@ -89,18 +89,25 @@
               id: otherwise-a5ac
               steps:
                 - setHeader:
+                    id: setHeader-53a7
+                    name: CamelHttpResponseCode
+                    expression:
+                      constant:
+                        id: constant-63a3
+                        expression: "404"
+                - setHeader:
                     id: setHeader-53c8
                     name: Content-Type
                     expression:
                       constant:
                         id: constant-db38
-                        expression: application/html
+                        expression: text/html
                 - setBody:
                     id: setBody-2562
                     expression:
                       simple:
                         id: simple-8c92
-                        expression: resource:classpath:Error404.xml
+                        expression: resource:classpath:Error404.html
                 - log:
                     id: log-f64d
                     message: 111111111111 ${body}
