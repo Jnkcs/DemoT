@@ -90,19 +90,17 @@
               steps:
                 - setHeader:
                     id: setHeader-53c8
-                    name: CamelHttpResponseCode
+                    name: Content-Type
                     expression:
                       constant:
                         id: constant-db38
-                        expression: "404"
+                        expression: application/html
                 - setBody:
                     id: setBody-2562
                     expression:
-                      constant:
-                        id: constant-6674
-                        expression: "404"
-                - stop:
-                    id: stop-a3e2
+                      simple:
+                        id: simple-8c92
+                        expression: resource:classpath:Error404.xml
                 - log:
                     id: log-f64d
                     message: 111111111111 ${body}
