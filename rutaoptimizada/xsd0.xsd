@@ -1,0 +1,37 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+    <xs:import schemaLocation="xsd2.xsd" namespace="http://schemas.datacontract.org/2004/07/pFacturaElectronica.Serializable"/>
+	<xs:element name="InsertarDocumento">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" name="servidor" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="empresa" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="numeroDocumento" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="xml" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="usuarioSAP" nillable="true" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InsertarDocumentoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/pFacturaElectronica.Serializable" minOccurs="0" name="InsertarDocumentoResult" nillable="true" type="q1:RespuestaXML"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IngresarEstadoCompletado">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" name="empresa" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="numeroDocumento" nillable="true" type="xs:string"/>
+				<xs:element minOccurs="0" name="correlativo" type="xs:int"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IngresarEstadoCompletadoResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element minOccurs="0" name="IngresarEstadoCompletadoResult" nillable="true" type="xs:string"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

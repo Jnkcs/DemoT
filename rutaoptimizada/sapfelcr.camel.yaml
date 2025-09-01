@@ -1,0 +1,101 @@
+- route:
+    id: route-daae
+    nodePrefixId: route-704
+    from:
+      id: from-9de8
+      uri: platform-http
+      parameters:
+        path: /
+        matchOnUriPrefix: true
+      steps:
+        - choice:
+            id: choice-f5bc
+            when:
+              - id: when-7858
+                expression:
+                  simple:
+                    id: simple-d9c3
+                    expression: >-
+                      ${header.CamelHttpPath} == '/FacturaElectronica' &&
+                      ${header.wsdl} != null
+                steps:
+                  - setBody:
+                      id: setBody-b747
+                      expression:
+                        simple:
+                          id: simple-0ed1
+                          expression: resource:classpath:FacturaElectronica.wsdl
+                  - log:
+                      id: log-9992
+                      message: ${body}
+                      loggingLevel: INFO
+              - id: when-93dd
+                expression:
+                  simple:
+                    id: simple-609e
+                    expression: >-
+                      ${header.CamelHttpPath} ==
+                      '/services/facturaElectronicaService'
+                steps:
+                  - log:
+                      id: log-b8b0
+                      message: 1111111 ${body}
+                      loggingLevel: INFO
+                  - to:
+                      id: to-477f
+                      uri: direct
+                      parameters:
+                        name: services
+              - id: when-11b8
+                expression:
+                  simple:
+                    id: simple-0bcf
+                    expression: >-
+                      ${header.CamelHttpPath} starts with '/xsd' &&
+                      ${header.CamelHttpPath} ends with '.xsd'
+                steps:
+                  - setBody:
+                      id: setBody-218d
+                      expression:
+                        simple:
+                          id: simple-1fcf
+                          expression: resource:classpath:${header.CamelHttpPath}
+                  - log:
+                      id: log-3858
+                      message: ${body}
+                      loggingLevel: INFO
+            otherwise:
+              id: otherwise-a5ac
+              steps:
+                - setHeader:
+                    id: setHeader-53c8
+                    name: CamelHttpResponseCode
+                    expression:
+                      constant:
+                        id: constant-db38
+                        expression: "404"
+                - setBody:
+                    id: setBody-2562
+                    expression:
+                      constant:
+                        id: constant-6674
+                        expression: "404"
+                - stop:
+                    id: stop-a3e2
+                - log:
+                    id: log-f64d
+                    message: 111111111111 ${body}
+                    loggingLevel: INFO
+- route:
+    id: route-2c2d
+    nodePrefixId: route-2b9
+    from:
+      id: from-0f15
+      uri: direct
+      parameters:
+        name: services
+      steps:
+        - log:
+            id: log-88c4
+            message: 22222 ${body}
+            loggingLevel: INFO
