@@ -19,6 +19,13 @@
                       ${header.CamelHttpPath} == '/FacturaElectronica' &&
                       ${header.wsdl} != null
                 steps:
+                  - setHeader:
+                      id: setHeader-45e3
+                      name: Content-Type
+                      expression:
+                        constant:
+                          id: constant-57e8
+                          expression: application/xml
                   - setBody:
                       id: setBody-b747
                       expression:
@@ -37,6 +44,13 @@
                       ${header.CamelHttpPath} ==
                       '/services/facturaElectronicaService'
                 steps:
+                  - setHeader:
+                      id: setHeader-856d
+                      name: Content-Type
+                      expression:
+                        constant:
+                          id: constant-2568
+                          expression: application/xml
                   - log:
                       id: log-b8b0
                       message: 1111111 ${body}
@@ -54,6 +68,13 @@
                       ${header.CamelHttpPath} starts with '/xsd' &&
                       ${header.CamelHttpPath} ends with '.xsd'
                 steps:
+                  - setHeader:
+                      id: setHeader-fc48
+                      name: Content-Type
+                      expression:
+                        constant:
+                          id: constant-5e7a
+                          expression: application/xml
                   - setBody:
                       id: setBody-218d
                       expression:
