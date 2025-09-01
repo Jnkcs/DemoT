@@ -81,13 +81,6 @@
               id: otherwise-a5ac
               steps:
                 - setHeader:
-                    id: setHeader-53a7
-                    name: CamelHttpResponseCode
-                    expression:
-                      constant:
-                        id: constant-63a3
-                        expression: "404"
-                - setHeader:
                     id: setHeader-53c8
                     name: Content-Type
                     expression:

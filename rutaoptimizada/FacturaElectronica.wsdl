@@ -52,7 +52,7 @@
 	</wsdl:binding>
 	<wsdl:service name="FacturaElectronica">
 		<wsdl:port name="BasicHttpBinding_IFacturaApache" binding="tns:BasicHttpBinding_IFacturaApache">                        
-			<soap:address location="http://10.10.206.27:8097/services/facturaElectronicaService"/>
+			<soap:address location="http://192.168.137.1:8098/services/facturaElectronicaService"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>
