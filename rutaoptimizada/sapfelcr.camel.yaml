@@ -32,10 +32,6 @@
                         simple:
                           id: simple-0ed1
                           expression: resource:classpath:FacturaElectronica.wsdl
-                  - log:
-                      id: log-9992
-                      message: ${body}
-                      loggingLevel: INFO
               - id: when-93dd
                 expression:
                   simple:
@@ -53,7 +49,7 @@
                           expression: application/xml
                   - log:
                       id: log-b8b0
-                      message: 1111111 ${body}
+                      message: "-----> ${body}"
                       loggingLevel: INFO
                   - to:
                       id: to-477f
@@ -81,10 +77,6 @@
                         simple:
                           id: simple-1fcf
                           expression: resource:classpath:${header.CamelHttpPath}
-                  - log:
-                      id: log-3858
-                      message: ${body}
-                      loggingLevel: INFO
             otherwise:
               id: otherwise-a5ac
               steps:
@@ -108,10 +100,6 @@
                       simple:
                         id: simple-8c92
                         expression: resource:classpath:Error404.html
-                - log:
-                    id: log-f64d
-                    message: 111111111111 ${body}
-                    loggingLevel: INFO
 - route:
     id: route-2c2d
     nodePrefixId: route-2b9
@@ -123,5 +111,5 @@
       steps:
         - log:
             id: log-88c4
-            message: 22222 ${body}
+            message: "-----> ${body}"
             loggingLevel: INFO
