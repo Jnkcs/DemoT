@@ -1,117 +1,68 @@
-- beans:
-    - name: cxfEndpoint
-      type: org.apache.camel.component.cxf.jaxws.CxfEndpoint
-      properties:
-        address: >-
-          http://spgtsapqlt.disagro.corp/sap/bc/srt/rfc/sap/zes_sd_consulta_transporte/110/zws_d_consulta_transporte/zws_d_consulta_transporte
-        username: "{{sap.soap.username}}"
-        password: "{{sap.soap.password}}"
-        dataFormat: PAYLOAD
 - route:
-    id: route-daae
-    nodePrefixId: route-704
+    id: route-d948
+    nodePrefixId: route-0d9
     from:
-      id: from-9de8
+      id: from-d41d
       uri: platform-http
       parameters:
-        path: /
-        matchOnUriPrefix: true
+        path: /ConsultaTransporte
       steps:
         - choice:
-            id: choice-f5bc
+            id: choice-523f
             when:
-              - id: when-7858
+              - id: when-ab65
                 expression:
                   simple:
-                    id: simple-d9c3
+                    id: simple-9066
                     expression: >-
-                      ${header.CamelHttpPath} == '/ConsultaTransporte' &&
-                      ${header.wsdl} != null
+                      "${header.CamelHttpMethod} == 'GET' && ${header.wsdl} !=
+                      null"
                 steps:
-                  - setHeader:
-                      id: setHeader-45e3
-                      name: Content-Type
-                      expression:
-                        constant:
-                          id: constant-57e8
-                          expression: application/xml
                   - setBody:
-                      id: setBody-b747
+                      id: setBody-7f42
                       expression:
                         simple:
-                          id: simple-0ed1
+                          id: simple-2b61
                           expression: resource:classpath:ConsultaTransporte.wsdl
-              - id: when-93dd
-                expression:
-                  simple:
-                    id: simple-609e
-                    expression: >-
-                      ${header.CamelHttpPath} ==
-                      '/services/zws_d_consulta_transporte'
-                steps:
                   - setHeader:
-                      id: setHeader-856d
+                      id: setHeader-48d8
                       name: Content-Type
                       expression:
                         constant:
-                          id: constant-2568
-                          expression: application/xml
-                  - log:
-                      id: log-b8b0
-                      message: "-----> ${body}"
-                      loggingLevel: "OFF"
-                  - to:
-                      id: to-477f
-                      uri: direct
-                      parameters:
-                        name: services
+                          id: constant-0a87
+                          expression: text/xml;
             otherwise:
-              id: otherwise-a5ac
-              steps:
-                - setHeader:
-                    id: setHeader-53c8
-                    name: Content-Type
-                    expression:
-                      constant:
-                        id: constant-db38
-                        expression: text/html
-                - setBody:
-                    id: setBody-2562
-                    expression:
-                      simple:
-                        id: simple-8c92
-                        expression: resource:classpath:Error404.html
+              id: otherwise-f095
 - route:
-    id: route-2c2d
-    nodePrefixId: route-2b9
+    id: route-0208
+    nodePrefixId: route-27a
     from:
-      id: from-0f15
-      uri: direct
+      id: from-b1af
+      uri: platform-http
       parameters:
-        name: services
+        path: /services/zws_d_consulta_transporte
       steps:
+        - setHeader:
+            id: setHeader-5830
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-310f
+                expression: text/xml; charset=utf-8
+        - to:
+            id: to-1dbb
+            uri: http
+            parameters:
+              bridgeEndpoint: true
+              httpUri: >-
+                http://spgtsapqlt.disagro.corp/sap/bc/srt/rfc/sap/zes_sd_consulta_transporte/110/zws_d_consulta_transporte/zws_d_consulta_transporte?sap-client=110
+              httpMethod: POST
+              authMethodPriority: Basic
+              authUsername: "{{sap.soap.username}}"
+              authPassword: "{{sap.soap.password}}"
+              disableStreamCache: true
+              authenticationPreemptive: true
         - log:
-            id: log-88c4
-            message: "????? > ${body}"
+            id: log-31cc
+            message: FUNCIONAAA ${body}
             loggingLevel: INFO
-        - doTry:
-            id: doTry-57fa
-            doCatch:
-              - id: doCatch-8793
-                exception:
-                  - java.lang.Exception
-                steps:
-                  - log:
-                      id: log-90f8
-                      message: ${body}
-                      loggingLevel: INFO
-            steps:
-              - to:
-                  id: to-7e41
-                  uri: cxf
-                  parameters:
-                    beanId: bean:cxfEndpoint
-              - log:
-                  id: log-d102
-                  message: ${body}
-                  loggingLevel: INFO
