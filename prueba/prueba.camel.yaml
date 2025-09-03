@@ -42,20 +42,11 @@
       parameters:
         path: /services/zws_d_consulta_transporte
       steps:
-        - log:
-            id: log-a388
-            message: ${body}
-            loggingLevel: INFO
-        - setBody:
-            id: setBody-63f4
-            expression:
-              constant:
-                id: constant-6325
-                expression: "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:rfc:functions\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n      <urn:ZFSD_CONSULTA_TRANSPORTE_TEMP>\r\n         <CENTRO>5001</CENTRO>\r\n         <CORRELATIVO>1000000000</CORRELATIVO>\r\n\r\n         <ENTREGAS>\r\n            <item>\r\n               <VBELN>0080000001</VBELN>\r\n               <POSNR>000010</POSNR>\r\n               <UECHA>000000</UECHA>\r\n               <MATNR>10000000</MATNR>\r\n               <VTEXT/>\r\n               <VTEXT1/>\r\n               <VTEXT2/>\r\n               <VTEXT3/>\r\n               <VTEXT4/>\r\n               <LFIMG>0.0</LFIMG>\r\n               <MEINS/>\r\n               <MEINST/>\r\n               <NTGEW>0.0</NTGEW>\r\n               <BRGEW>0.0</BRGEW>\r\n               <GEWEI/>\r\n               <PLNUM/>\r\n               <TEXTP1/>\r\n               <TEXTP2/>\r\n               <TEXTP3/>\r\n               <WERKS/>\r\n               <LGORT/>\r\n               <CHARG/>\r\n               <VALIDAR/>\r\n               <KUNNR/>\r\n               <NAME01/>\r\n               <ADRNR/>\r\n               <ERNAM/>\r\n               <BELNR/>\r\n               <AUDAT>0000-00-00</AUDAT>\r\n               <LIFEX/>\r\n               <BSTNK/>\r\n               <BSTDK>0000-00-00</BSTDK>\r\n               <TRAID/>\r\n               <ROUTE/>\r\n               <PARTNER>00000000</PARTNER>\r\n               <NAMPRT/>\r\n               <TEXTC1/>\r\n               <TEXTC2/>\r\n               <TKNUM/>\r\n               <BUKRSC/>\r\n               <BUKRSF/>\r\n            </item>\r\n         </ENTREGAS>\r\n         <ERROR>\r\n            <item>\r\n               <DETALLE>Mensaje de error personalizado</DETALLE>\r\n            </item>\r\n         </ERROR>\r\n         <ID_PILOTO>JALF</ID_PILOTO>\r\n         <PLACA>GU78BKT</PLACA>\r\n         <SEGURO>POLIZA1234567</SEGURO>\r\n         <TRANSPORTE>\r\n            <item>\r\n               <TKNUM>0000000001</TKNUM>\r\n               <TDLNR/>\r\n               <TXTSP/>\r\n               <VSART/>\r\n               <TXT_VSART/>\r\n               <DPREG/>\r\n               <UPREG/>\r\n               <DPLBG/>\r\n               <UPLBG/>\r\n               <PARNR>0000000000</PARNR>\r\n               <PARNR_TXT/>\r\n            </item>\r\n         </TRANSPORTE>\r\n      </urn:ZFSD_CONSULTA_TRANSPORTE_TEMP>\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
-        - log:
-            id: log-41c6
-            message: ${body}
-            loggingLevel: INFO
+        - to:
+            id: to-8689
+            uri: validator
+            parameters:
+              resourceUri: classpath:schema0.xsd
         - setHeader:
             id: setHeader-5830
             name: Content-Type
@@ -63,18 +54,20 @@
               constant:
                 id: constant-310f
                 expression: text/xml; charset=utf-8
+        - log:
+            id: log-d73c
+            message: ${body}
+            loggingLevel: INFO
         - to:
             id: to-1dbb
             uri: http
             parameters:
               bridgeEndpoint: true
               httpUri: >-
-                http://SPGTSAPQLT.disagro.corp/sap/bc/srt/rfc/sap/zes_sd_consulta_transporte/110/zws_d_consulta_transporte/zws_d_consulta_transporte
+                http://spgtsapqlt.disagro.corp/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zes_sd_consulta_transporte/110/zws_d_consulta_transporte/zws_d_consulta_transporte?sap-client=110
               httpMethod: POST
               authMethodPriority: Basic
               authUsername: "{{sap.soap.username}}"
               authPassword: "{{sap.soap.password}}"
-        - log:
-            id: log-862a
-            message: FUNCIONA ${body}
-            loggingLevel: INFO
+              disableStreamCache: true
+              authenticationPreemptive: true

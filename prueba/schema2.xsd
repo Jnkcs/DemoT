@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Technologies Online Tools 1.0 (https://www.liquid-technologies.com) -->
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="CENTRO" type="xs:unsignedShort" />
+  <xs:element name="CORRELATIVO" type="xs:unsignedInt" />
+  <xs:element name="ENTREGAS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="item">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="VBELN" type="xs:unsignedInt" />
+              <xs:element name="POSNR" type="xs:unsignedByte" />
+              <xs:element name="UECHA" type="xs:unsignedByte" />
+              <xs:element name="MATNR" type="xs:unsignedInt" />
+              <xs:element name="VTEXT" />
+              <xs:element name="VTEXT1" />
+              <xs:element name="VTEXT2" />
+              <xs:element name="VTEXT3" />
+              <xs:element name="VTEXT4" />
+              <xs:element name="LFIMG" type="xs:decimal" />
+              <xs:element name="MEINS" />
+              <xs:element name="MEINST" />
+              <xs:element name="NTGEW" type="xs:decimal" />
+              <xs:element name="BRGEW" type="xs:decimal" />
+              <xs:element name="GEWEI" />
+              <xs:element name="PLNUM" />
+              <xs:element name="TEXTP1" />
+              <xs:element name="TEXTP2" />
+              <xs:element name="TEXTP3" />
+              <xs:element name="WERKS" />
+              <xs:element name="LGORT" />
+              <xs:element name="CHARG" />
+              <xs:element name="VALIDAR" />
+              <xs:element name="KUNNR" />
+              <xs:element name="NAME01" />
+              <xs:element name="ADRNR" />
+              <xs:element name="ERNAM" />
+              <xs:element name="BELNR" />
+              <xs:element name="AUDAT" type="xs:string" />
+              <xs:element name="LIFEX" />
+              <xs:element name="BSTNK" />
+              <xs:element name="BSTDK" type="xs:string" />
+              <xs:element name="TRAID" />
+              <xs:element name="ROUTE" />
+              <xs:element name="PARTNER" type="xs:unsignedByte" />
+              <xs:element name="NAMPRT" />
+              <xs:element name="TEXTC1" />
+              <xs:element name="TEXTC2" />
+              <xs:element name="TKNUM" />
+              <xs:element name="BUKRSC" />
+              <xs:element name="BUKRSF" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ERROR">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="item">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="DETALLE" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ID_PILOTO" type="xs:string" />
+  <xs:element name="PLACA" type="xs:string" />
+  <xs:element name="SEGURO" type="xs:string" />
+  <xs:element name="TRANSPORTE">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="item">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TKNUM" type="xs:unsignedByte" />
+              <xs:element name="TDLNR" />
+              <xs:element name="TXTSP" />
+              <xs:element name="VSART" />
+              <xs:element name="TXT_VSART" />
+              <xs:element name="DPREG" />
+              <xs:element name="UPREG" />
+              <xs:element name="DPLBG" />
+              <xs:element name="UPLBG" />
+              <xs:element name="PARNR" type="xs:unsignedByte" />
+              <xs:element name="PARNR_TXT" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
