@@ -64,10 +64,14 @@
             parameters:
               bridgeEndpoint: true
               httpUri: >-
-                http://spgtsapqlt.disagro.corp/sap/bc/srt/wsdl/flv_10002A111AD1/bndg_url/sap/bc/srt/rfc/sap/zes_sd_consulta_transporte/110/zws_d_consulta_transporte/zws_d_consulta_transporte?sap-client=110
+                http://spgtsapqlt.disagro.corp/sap/bc/srt/rfc/sap/zes_sd_consulta_transporte/110/zws_d_consulta_transporte/zws_d_consulta_transporte?sap-client=110
               httpMethod: POST
               authMethodPriority: Basic
               authUsername: "{{sap.soap.username}}"
               authPassword: "{{sap.soap.password}}"
               disableStreamCache: true
               authenticationPreemptive: true
+        - log:
+            id: log-31cc
+            message: FUNCIONAAA ${body}
+            loggingLevel: INFO
