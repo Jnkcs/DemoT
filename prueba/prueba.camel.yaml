@@ -1,12 +1,46 @@
 - route:
-    id: route-a103
-    nodePrefixId: route-481
+    id: route-d948
+    nodePrefixId: route-0d9
     from:
-      id: from-cd8f
-      uri: timer
+      id: from-d41d
+      uri: platform-http
       parameters:
-        timerName: prueba
-        repeatCount: "1"
+        path: /ConsultaTransporte
+      steps:
+        - choice:
+            id: choice-523f
+            when:
+              - id: when-ab65
+                expression:
+                  simple:
+                    id: simple-9066
+                    expression: >-
+                      "${header.CamelHttpMethod} == 'GET' && ${header.wsdl} !=
+                      null"
+                steps:
+                  - setBody:
+                      id: setBody-7f42
+                      expression:
+                        simple:
+                          id: simple-2b61
+                          expression: resource:classpath:ConsultaTransporte.wsdl
+                  - setHeader:
+                      id: setHeader-48d8
+                      name: Content-Type
+                      expression:
+                        constant:
+                          id: constant-0a87
+                          expression: text/xml;
+            otherwise:
+              id: otherwise-f095
+- route:
+    id: route-0208
+    nodePrefixId: route-27a
+    from:
+      id: from-b1af
+      uri: platform-http
+      parameters:
+        path: /services/zws_d_consulta_transporte
       steps:
         - log:
             id: log-a388
@@ -42,5 +76,5 @@
               authPassword: "{{sap.soap.password}}"
         - log:
             id: log-862a
-            message: ${body}
+            message: FUNCIONA ${body}
             loggingLevel: INFO
