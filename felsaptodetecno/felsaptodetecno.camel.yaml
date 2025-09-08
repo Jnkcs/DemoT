@@ -1,0 +1,66 @@
+- rest:
+    id: rest-68da
+    path: /dev
+    consumes: application/xml
+    produces: application/xml
+    post:
+      - id: post-87d6
+        path: /fel
+        to: direct:SAP_to_Detecno
+        consumes: application/xml
+        produces: application/xml
+- route:
+    id: route-33ae
+    nodePrefixId: route-bb3
+    from:
+      id: from-135f
+      uri: direct
+      parameters:
+        name: SAP_to_Detecno
+      steps:
+        - marshal:
+            id: marshal-e6dc
+            base64:
+              id: base64-0bf1
+        - log:
+            id: log-d7c0
+            message: ${body}
+            loggingLevel: INFO
+        - setBody:
+            id: setBody-29a8
+            expression:
+              simple:
+                id: simple-7281
+                expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\">\r\n\t<soap:Header/>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<tem:xml>${body}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
+        - log:
+            id: log-f888
+            message: ${body}
+            loggingLevel: INFO
+        - removeHeaders:
+            id: removeHeaders-38d6
+            pattern: CamelHttp*
+        - setHeader:
+            id: setHeader-b9a3
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-b5ec
+                expression: application/xml
+        - log:
+            id: log-4d58
+            message: ${body}
+            loggingLevel: INFO
+        - to:
+            id: to-c973
+            uri: http
+            parameters:
+              disableStreamCache: true
+              bridgeEndpoint: true
+              httpMethod: POST
+              httpUri: >-
+                https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
+              throwExceptionOnFailure: false
+        - log:
+            id: log-c7d7
+            message: ${body}
+            loggingLevel: INFO
