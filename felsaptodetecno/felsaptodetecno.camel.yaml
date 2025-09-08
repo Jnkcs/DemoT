@@ -21,7 +21,7 @@
         - log:
             id: log-c7d7
             message: ${body}
-            loggingLevel: INFO
+            loggingLevel: "OFF"
         - doTry:
             id: doTry-2357
             doCatch:
@@ -57,17 +57,21 @@
               - log:
                   id: log-6e50
                   message: ${body}
-                  loggingLevel: INFO
+                  loggingLevel: "OFF"
+              - marshal:
+                  id: marshal-21fa
+                  base64:
+                    id: base64-0f13
               - setBody:
                   id: setBody-29a8
                   expression:
                     simple:
                       id: simple-7281
-                      expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action s:mustUnderstand=\"1\">http://tempuri.org/IDetecno/ComprobanteGenerarSAT40</a:Action>\r\n\t\t<a:To s:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<tem:xml>${base64(body)}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
+                      expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/ComprobanteGenerarSAT40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:xml>${body}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>\r\n"
               - log:
                   id: log-2e45
                   message: ${body}
-                  loggingLevel: INFO
+                  loggingLevel: "OFF"
               - removeHeaders:
                   id: removeHeaders-38d6
                   pattern: CamelHttp*
@@ -93,6 +97,13 @@
                     constant:
                       id: constant-b5ec
                       expression: http://tempuri.org/IDetecno/ComprobanteGenerarSAT40
+              - to:
+                  id: to-75d7
+                  uri: smtp
+                  parameters:
+                    host: relay.disagro.corp
+                    port: "25"
+                    to: jchamale@disagro.com
               - to:
                   id: to-c973
                   uri: http
