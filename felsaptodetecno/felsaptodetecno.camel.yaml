@@ -1,12 +1,12 @@
 - rest:
     id: rest-68da
-    path: /dev
+    path: /dev/fel
     consumes: application/xml
     produces: application/xml
     post:
       - id: post-87d6
-        path: /fel
-        to: direct:SAP_to_Detecno
+        path: /ComprobanteGenerarSAT40
+        to: direct:ComprobanteGenerarSAT40
         consumes: application/xml
         produces: application/xml
 - route:
@@ -16,7 +16,7 @@
       id: from-135f
       uri: direct
       parameters:
-        name: SAP_to_Detecno
+        name: ComprobanteGenerarSAT40
       steps:
         - log:
             id: log-c7d7
@@ -116,5 +116,14 @@
                     throwExceptionOnFailure: true
               - log:
                   id: log-ac72
+                  message: ${body}
+                  loggingLevel: INFO
+              - to:
+                  id: to-e020
+                  uri: xslt
+                  parameters:
+                    resourceUri: classpath:transformacion-completa.xsl
+              - log:
+                  id: log-c417
                   message: ${body}
                   loggingLevel: INFO
