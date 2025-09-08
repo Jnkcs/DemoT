@@ -18,49 +18,92 @@
       parameters:
         name: SAP_to_Detecno
       steps:
-        - marshal:
-            id: marshal-e6dc
-            base64:
-              id: base64-0bf1
-        - log:
-            id: log-d7c0
-            message: ${body}
-            loggingLevel: INFO
-        - setBody:
-            id: setBody-29a8
-            expression:
-              simple:
-                id: simple-7281
-                expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\">\r\n\t<soap:Header/>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<tem:xml>${body}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
-        - log:
-            id: log-f888
-            message: ${body}
-            loggingLevel: INFO
-        - removeHeaders:
-            id: removeHeaders-38d6
-            pattern: CamelHttp*
-        - setHeader:
-            id: setHeader-b9a3
-            name: Content-Type
-            expression:
-              constant:
-                id: constant-b5ec
-                expression: application/xml
-        - log:
-            id: log-4d58
-            message: ${body}
-            loggingLevel: INFO
-        - to:
-            id: to-c973
-            uri: http
-            parameters:
-              disableStreamCache: true
-              bridgeEndpoint: true
-              httpMethod: POST
-              httpUri: >-
-                https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
-              throwExceptionOnFailure: false
         - log:
             id: log-c7d7
             message: ${body}
             loggingLevel: INFO
+        - doTry:
+            id: doTry-2357
+            doCatch:
+              - id: doCatch-d525
+                exception:
+                  - org.apache.camel.http.base.HttpOperationFailedException
+                steps:
+                  - log:
+                      id: log-1df8
+                      message: >-
+                        Ha ocurrido un error en la llamada a Detecno. Código:
+                        ${exception.statusCode}, Cuerpo de la respuesta:
+                        ${exception.responseBody}
+                      loggingLevel: ERROR
+                  - setHeader:
+                      id: setHeader-0d4f
+                      name: CamelHttpResponseCode
+                      expression:
+                        simple:
+                          id: simple-cf8f
+                          expression: ${exception.statusCode}
+                  - setBody:
+                      id: setBody-181a
+                      expression:
+                        simple:
+                          id: simple-1c4b
+                          expression: ${exception.responseBody}
+                  - log:
+                      id: log-44c9
+                      message: ${body}
+                      loggingLevel: INFO
+            steps:
+              - log:
+                  id: log-6e50
+                  message: ${body}
+                  loggingLevel: INFO
+              - setBody:
+                  id: setBody-29a8
+                  expression:
+                    simple:
+                      id: simple-7281
+                      expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action s:mustUnderstand=\"1\">http://tempuri.org/IDetecno/ComprobanteGenerarSAT40</a:Action>\r\n\t\t<a:To s:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<tem:xml>${base64(body)}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
+              - log:
+                  id: log-2e45
+                  message: ${body}
+                  loggingLevel: INFO
+              - removeHeaders:
+                  id: removeHeaders-38d6
+                  pattern: CamelHttp*
+              - setHeader:
+                  id: setHeader-e9bf
+                  name: CamelHttpUri
+                  expression:
+                    constant:
+                      id: constant-6c42
+                      expression: >-
+                        https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
+              - setHeader:
+                  id: setHeader-1d99
+                  name: Content-Type
+                  expression:
+                    simple:
+                      id: simple-9e91
+                      expression: application/soap+xml
+              - setHeader:
+                  id: setHeader-b9a3
+                  name: SOAPAction
+                  expression:
+                    constant:
+                      id: constant-b5ec
+                      expression: http://tempuri.org/IDetecno/ComprobanteGenerarSAT40
+              - to:
+                  id: to-c973
+                  uri: http
+                  parameters:
+                    disableStreamCache: true
+                    bridgeEndpoint: true
+                    httpMethod: POST
+                    httpUri: >-
+                      https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
+                    throwExceptionOnFailure: true
+              - log:
+                  id: log-ac72
+                  message: ${body}
+                  loggingLevel: INFO
