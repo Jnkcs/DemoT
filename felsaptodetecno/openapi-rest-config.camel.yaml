@@ -1,0 +1,7 @@
+- restConfiguration:
+    inlineRoutes: false
+- rest:
+    id: openApiRestService
+    openApi:
+      id: openApi-8209
+      specification: classpath://openapi.json
