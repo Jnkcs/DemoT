@@ -91,6 +91,14 @@
                   uri: xslt
                   parameters:
                     resourceUri: classpath:BuscarPDF40.xsl
+              - to:
+                  id: to-75d7
+                  uri: smtp
+                  parameters:
+                    host: relay.disagro.corp
+                    port: "25"
+                    to: jchamale@disagro.com
+                    from: noreply@apache.camel
               - log:
                   id: log-96f2
                   message: ${body}
@@ -168,13 +176,6 @@
                       id: constant-b5ec
                       expression: http://tempuri.org/IDetecno/ComprobanteGenerarSAT40
               - to:
-                  id: to-75d7
-                  uri: smtp
-                  parameters:
-                    host: relay.disagro.corp
-                    port: "25"
-                    to: jchamale@disagro.com
-              - to:
                   id: to-c973
                   uri: http
                   parameters:
@@ -193,3 +194,11 @@
                   id: log-c417
                   message: ${body}
                   loggingLevel: INFO
+              - to:
+                  id: to-0bb0
+                  uri: smtp
+                  parameters:
+                    host: relay.disagro.corp
+                    port: "25"
+                    to: jchamale@disagro.com
+                    from: noreply@apache.camel
