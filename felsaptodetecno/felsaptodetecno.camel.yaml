@@ -51,13 +51,20 @@
                           id: simple-1c4b
                           expression: ${exception.responseBody}
             steps:
+              - setHeader:
+                  id: setHeader-a424
+                  name: facturaIdValue
+                  expression:
+                    xpath:
+                      id: xpath-8a2f
+                      expression: /facturaId/text()
               - setBody:
                   id: setBody-29a1
                   description: SOAP
                   expression:
                     simple:
                       id: simple-7281
-                      expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/Comprobante_BuscarPdf40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:Comprobante_BuscarPdf40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:facturaId>${body}</tem:facturaId>\r\n\t\t</tem:Comprobante_BuscarPdf40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
+                      expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/Comprobante_BuscarPdf40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:Comprobante_BuscarPdf40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:facturaId>${header.facturaIdValue}</tem:facturaId>\r\n\t\t</tem:Comprobante_BuscarPdf40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
               - removeHeaders:
                   id: removeHeaders-38d1
                   description: Headers
@@ -79,17 +86,13 @@
                     httpUri: >-
                       https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
                     throwExceptionOnFailure: true
-              - log:
-                  id: log-f9e0
-                  message: ${body}
-                  loggingLevel: INFO
               - to:
                   id: to-5672
                   uri: xslt
                   parameters:
                     resourceUri: classpath:BuscarPDF40.xsl
               - log:
-                  id: log-c411
+                  id: log-96f2
                   message: ${body}
                   loggingLevel: INFO
 - route:
