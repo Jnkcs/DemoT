@@ -3,12 +3,13 @@
     path: /dev/fel
     consumes: application/xml
     produces: application/xml
-    post:
-      - id: post-0d0a
+    get:
+      - id: get-73ae
         path: /BuscarPdf40
         to: direct:BuscarPdf40
         consumes: application/xml
         produces: application/xml
+    post:
       - id: post-87d6
         path: /ComprobanteGenerarSAT40
         to: direct:ComprobanteGenerarSAT40
@@ -57,10 +58,6 @@
                     simple:
                       id: simple-7281
                       expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/Comprobante_BuscarPdf40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:Comprobante_BuscarPdf40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:facturaId>${body}</tem:facturaId>\r\n\t\t</tem:Comprobante_BuscarPdf40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
-              - log:
-                  id: log-cf1f
-                  message: ${body}
-                  loggingLevel: INFO
               - removeHeaders:
                   id: removeHeaders-38d1
                   description: Headers
@@ -82,17 +79,11 @@
                     httpUri: >-
                       https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
                     throwExceptionOnFailure: true
-              - log:
-                  id: log-33db
-                  message: ${body}
-                  loggingLevel: INFO
-              - stop:
-                  id: stop-9287
               - to:
                   id: to-e021
                   uri: xslt
                   parameters:
-                    resourceUri: classpath:transformacion-completa.xsl
+                    resourceUri: classpath:BuscarPDF40.xsl
               - log:
                   id: log-c411
                   message: ${body}
