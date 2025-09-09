@@ -154,27 +154,12 @@
                   id: removeHeaders-38d6
                   pattern: CamelHttp*
               - setHeader:
-                  id: setHeader-e9bf
-                  name: CamelHttpUri
-                  expression:
-                    constant:
-                      id: constant-6c42
-                      expression: >-
-                        https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
-              - setHeader:
                   id: setHeader-1d99
                   name: Content-Type
                   expression:
                     simple:
                       id: simple-9e91
                       expression: application/soap+xml
-              - setHeader:
-                  id: setHeader-b9a3
-                  name: SOAPAction
-                  expression:
-                    constant:
-                      id: constant-b5ec
-                      expression: http://tempuri.org/IDetecno/ComprobanteGenerarSAT40
               - to:
                   id: to-c973
                   uri: http
@@ -190,10 +175,6 @@
                   uri: xslt
                   parameters:
                     resourceUri: classpath:transformacion-completa.xsl
-              - log:
-                  id: log-c417
-                  message: ${body}
-                  loggingLevel: INFO
               - to:
                   id: to-0bb0
                   uri: smtp
@@ -202,3 +183,7 @@
                     port: "25"
                     to: jchamale@disagro.com
                     from: noreply@apache.camel
+              - log:
+                  id: log-c417
+                  message: ${body}
+                  loggingLevel: INFO
