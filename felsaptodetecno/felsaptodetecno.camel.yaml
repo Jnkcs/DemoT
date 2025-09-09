@@ -79,8 +79,12 @@
                     httpUri: >-
                       https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
                     throwExceptionOnFailure: true
+              - log:
+                  id: log-f9e0
+                  message: ${body}
+                  loggingLevel: INFO
               - to:
-                  id: to-e021
+                  id: to-5672
                   uri: xslt
                   parameters:
                     resourceUri: classpath:BuscarPDF40.xsl
