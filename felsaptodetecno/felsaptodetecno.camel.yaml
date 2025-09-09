@@ -50,11 +50,6 @@
                           id: simple-1c4b
                           expression: ${exception.responseBody}
             steps:
-              - marshal:
-                  id: marshal-21f1
-                  description: Base 64
-                  base64:
-                    id: base64-0f13
               - setBody:
                   id: setBody-29a1
                   description: SOAP
