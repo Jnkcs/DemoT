@@ -4,11 +4,104 @@
     consumes: application/xml
     produces: application/xml
     post:
+      - id: post-0d0a
+        path: /BuscarPdf40
+        to: direct:BuscarPdf40
+        consumes: application/xml
+        produces: application/xml
       - id: post-87d6
         path: /ComprobanteGenerarSAT40
         to: direct:ComprobanteGenerarSAT40
         consumes: application/xml
         produces: application/xml
+- route:
+    id: BuscarPdf40
+    from:
+      id: from-d8d8
+      uri: direct
+      parameters:
+        name: BuscarPdf40
+      steps:
+        - doTry:
+            id: doTry-2356
+            doCatch:
+              - id: doCatch-d521
+                exception:
+                  - org.apache.camel.http.base.HttpOperationFailedException
+                steps:
+                  - log:
+                      id: log-1df1
+                      message: >-
+                        Ha ocurrido un error en la llamada a Detecno. Código:
+                        ${exception.statusCode}, Cuerpo de la respuesta:
+                        ${exception.responseBody}
+                      loggingLevel: ERROR
+                  - setHeader:
+                      id: setHeader-0d41
+                      name: CamelHttpResponseCode
+                      expression:
+                        simple:
+                          id: simple-cf8f
+                          expression: ${exception.statusCode}
+                  - setBody:
+                      id: setBody-1811
+                      expression:
+                        simple:
+                          id: simple-1c4b
+                          expression: ${exception.responseBody}
+            steps:
+              - marshal:
+                  id: marshal-21f1
+                  description: Base 64
+                  base64:
+                    id: base64-0f13
+              - setBody:
+                  id: setBody-29a1
+                  description: SOAP
+                  expression:
+                    simple:
+                      id: simple-7281
+                      expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/Comprobante_BuscarPdf40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:Comprobante_BuscarPdf40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:facturaId>${body}</tem:facturaId>\r\n\t\t</tem:Comprobante_BuscarPdf40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
+              - log:
+                  id: log-cf1f
+                  message: ${body}
+                  loggingLevel: INFO
+              - removeHeaders:
+                  id: removeHeaders-38d1
+                  description: Headers
+                  pattern: CamelHttp*
+              - setHeader:
+                  id: setHeader-1d91
+                  name: Content-Type
+                  expression:
+                    simple:
+                      id: simple-9e91
+                      expression: application/soap+xml
+              - to:
+                  id: to-c971
+                  uri: http
+                  parameters:
+                    disableStreamCache: true
+                    bridgeEndpoint: true
+                    httpMethod: POST
+                    httpUri: >-
+                      https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
+                    throwExceptionOnFailure: true
+              - log:
+                  id: log-33db
+                  message: ${body}
+                  loggingLevel: INFO
+              - stop:
+                  id: stop-9287
+              - to:
+                  id: to-e021
+                  uri: xslt
+                  parameters:
+                    resourceUri: classpath:transformacion-completa.xsl
+              - log:
+                  id: log-c411
+                  message: ${body}
+                  loggingLevel: INFO
 - route:
     id: route-33ae
     nodePrefixId: route-bb3
@@ -18,10 +111,6 @@
       parameters:
         name: ComprobanteGenerarSAT40
       steps:
-        - log:
-            id: log-c7d7
-            message: ${body}
-            loggingLevel: "OFF"
         - doTry:
             id: doTry-2357
             doCatch:
@@ -49,15 +138,7 @@
                         simple:
                           id: simple-1c4b
                           expression: ${exception.responseBody}
-                  - log:
-                      id: log-44c9
-                      message: ${body}
-                      loggingLevel: INFO
             steps:
-              - log:
-                  id: log-6e50
-                  message: ${body}
-                  loggingLevel: "OFF"
               - marshal:
                   id: marshal-21fa
                   base64:
@@ -68,10 +149,6 @@
                     simple:
                       id: simple-7281
                       expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/ComprobanteGenerarSAT40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:xml>${body}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>\r\n"
-              - log:
-                  id: log-2e45
-                  message: ${body}
-                  loggingLevel: "OFF"
               - removeHeaders:
                   id: removeHeaders-38d6
                   pattern: CamelHttp*
@@ -114,10 +191,6 @@
                     httpUri: >-
                       https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
                     throwExceptionOnFailure: true
-              - log:
-                  id: log-ac72
-                  message: ${body}
-                  loggingLevel: INFO
               - to:
                   id: to-e020
                   uri: xslt
