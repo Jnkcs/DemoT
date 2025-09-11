@@ -1,0 +1,36 @@
+- rest:
+    id: rest-d6c4
+    path: /dev
+    consumes: application/json
+    produces: application/xml
+    post:
+      - id: post-da49
+        path: /prueba
+        to: direct:ActivoFijo
+        consumes: application/json
+        produces: application/xml
+- route:
+    id: ActivoFijo
+    from:
+      id: from-1aa7
+      uri: direct
+      parameters:
+        name: ActivoFijo
+      steps:
+        - log:
+            id: log-1892
+            message: ${body}
+            loggingLevel: INFO
+        - to:
+            id: to-6dc8
+            uri: kamelet:xj-identity-action
+            parameters:
+              direction: JSON2XML
+        - to:
+            id: to-6edb
+            uri: xslt
+            parameters:
+              resourceUri: classpath:purchase_order.xsl
+        - log:
+            id: log-d756
+            message: ${body}
