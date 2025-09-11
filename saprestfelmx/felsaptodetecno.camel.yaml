@@ -1,0 +1,125 @@
+- rest:
+    id: rest-68da
+    path: /dev/fel/mx
+    consumes: application/xml
+    produces: application/xml
+    get:
+      - id: get-73ae
+        path: /BuscarPdf40
+        to: direct:BuscarPdf40
+        consumes: application/xml
+        produces: application/xml
+    post:
+      - id: post-87d6
+        path: /ComprobanteGenerarSAT40
+        to: direct:ComprobanteGenerarSAT40
+        consumes: application/xml
+        produces: application/xml
+- route:
+    id: BuscarPdf40
+    from:
+      id: from-d8d8
+      uri: direct
+      parameters:
+        name: BuscarPdf40
+      steps:
+        - setHeader:
+            id: setHeader-e5ba
+            description: xpath
+            name: facturaIdValue
+            expression:
+              xpath:
+                id: xpath-b5e4
+                expression: /facturaId/text()
+        - setBody:
+            id: setBody-541e
+            description: SOAP
+            expression:
+              simple:
+                id: simple-c494
+                expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/Comprobante_BuscarPdf40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:Comprobante_BuscarPdf40>\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<tem:facturaId>${header.facturaIdValue}</tem:facturaId>\r\n\t\t</tem:Comprobante_BuscarPdf40>\r\n\t</soap:Body>\r\n</soap:Envelope>"
+        - removeHeaders:
+            id: removeHeaders-e95b
+            description: Headers
+            pattern: CamelHttp*
+        - setHeader:
+            id: setHeader-4887
+            description: XML
+            name: Content-Type
+            expression:
+              simple:
+                id: simple-4937
+                expression: application/soap+xml
+        - to:
+            id: to-0085
+            uri: http
+            parameters:
+              disableStreamCache: true
+              bridgeEndpoint: true
+              httpMethod: POST
+              httpUri: >-
+                https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
+              throwExceptionOnFailure: true
+        - to:
+            id: to-cc9b
+            description: XML
+            uri: xslt
+            parameters:
+              resourceUri: classpath:00_BuscarPDF40.xsl
+        - log:
+            id: log-4636
+            description: LOG
+            message: ${body}
+            loggingLevel: INFO
+- route:
+    id: ComprobanteGenerarSAT40
+    from:
+      id: from-9607
+      uri: direct
+      parameters:
+        name: ComprobanteGenerarSAT40
+      steps:
+        - marshal:
+            id: marshal-1a28
+            description: BASE 64
+            base64:
+              id: base64-283e
+        - setBody:
+            id: setBody-7686
+            description: SOAP
+            expression:
+              simple:
+                id: simple-9763
+                expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/ComprobanteGenerarSAT40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:xml>${body}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>\r\n"
+        - removeHeaders:
+            id: removeHeaders-641e
+            description: Headers
+            pattern: CamelHttp*
+        - setHeader:
+            id: setHeader-ad0b
+            description: XML
+            name: Content-Type
+            expression:
+              simple:
+                id: simple-cf8d
+                expression: application/soap+xml
+        - to:
+            id: to-ff17
+            uri: http
+            parameters:
+              disableStreamCache: true
+              bridgeEndpoint: true
+              httpMethod: POST
+              httpUri: >-
+                https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc
+              throwExceptionOnFailure: true
+        - to:
+            id: to-ff4e
+            description: XML
+            uri: xslt
+            parameters:
+              resourceUri: classpath:01_GenerarSAT40.xsl
+        - log:
+            id: log-aa24
+            description: LOG
+            message: ${body}

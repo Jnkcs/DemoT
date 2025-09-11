@@ -1,0 +1,8 @@
+services:
+  saprestfelmx:
+    image: saprestfelmx
+    restart: always
+    ports:
+      - "8102:8080"
+    networks:
+      - karavan
