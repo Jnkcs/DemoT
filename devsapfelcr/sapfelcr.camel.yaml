@@ -1,0 +1,479 @@
+- route:
+    id: route-daae
+    nodePrefixId: route-704
+    from:
+      id: from-9de8
+      uri: platform-http
+      parameters:
+        path: /FacturaElectronica
+      steps:
+        - choice:
+            id: choice-f5bc
+            when:
+              - id: when-8791
+                expression:
+                  simple:
+                    id: simple-5198
+                    expression: >-
+                      "${header.CamelHttpMethod} == 'GET' && ${header.wsdl} !=
+                      null"
+                steps:
+                  - setHeader:
+                      id: setHeader-2f4f
+                      name: Content-Type
+                      expression:
+                        constant:
+                          id: constant-d821
+                          expression: application/xml
+                  - setBody:
+                      id: setBody-4061
+                      expression:
+                        simple:
+                          id: simple-6806
+                          expression: resource:classpath:FacturaElectronica.wsdl
+            otherwise:
+              id: otherwise-1a8d
+              steps:
+                - setProperty:
+                    id: setProperty-d0d0
+                    name: CamelHttpResponseCode
+                    expression:
+                      constant:
+                        id: constant-bed7
+                        expression: "405 # Método no permitido"
+                - setHeader:
+                    id: setHeader-0dbe
+                    name: Content-Type
+                    expression:
+                      constant:
+                        id: constant-861d
+                        expression: application/html
+                - setBody:
+                    id: setBody-d289
+                    expression:
+                      constant:
+                        id: constant-d17e
+                        expression: "<html>\r\n    <body>\r\n        <h1>\r\n            Error: Este endpoint solo sirve la definición WSDL. Las operaciones SOAP deben enviarse a /services/facturaElectronicaService. Los XSDs se sirven en /xsd0.xsd, etc.\r\n        </h1>\r\n    </body>\r\n</html>\r\n                "
+- route:
+    id: route-bc28
+    nodePrefixId: route-d58
+    from:
+      id: from-db20
+      uri: platform-http
+      parameters:
+        path: /xsd0.xsd
+      steps:
+        - setHeader:
+            id: setHeader-74d5
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-403d
+                expression: application/xml
+        - setBody:
+            id: setBody-e575
+            expression:
+              simple:
+                id: simple-ff9b
+                expression: resource:classpath:xsd0.xsd
+- route:
+    id: route-d9d0
+    nodePrefixId: route-d0c
+    from:
+      id: from-28fc
+      uri: platform-http
+      parameters:
+        path: /xsd1.xsd
+      steps:
+        - setHeader:
+            id: setHeader-ae58
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-1e3d
+                expression: application/xml
+        - setBody:
+            id: setBody-a7fd
+            expression:
+              simple:
+                id: simple-8ffc
+                expression: resource:classpath:xsd1.xsd
+- route:
+    id: route-28e5
+    nodePrefixId: route-0d8
+    from:
+      id: from-3e19
+      uri: platform-http
+      parameters:
+        path: /xsd2.xsd
+      steps:
+        - setHeader:
+            id: setHeader-3ab8
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-d458
+                expression: application/xml
+        - setBody:
+            id: setBody-5540
+            expression:
+              simple:
+                id: simple-7931
+                expression: resource:classpath:xsd2.xsd
+- route:
+    id: route-4ccd
+    nodePrefixId: route-59b
+    from:
+      id: from-a194
+      uri: platform-http
+      parameters:
+        path: /services/facturaElectronicaService
+      steps:
+        - log:
+            id: log-1c6f
+            message: >-
+              Mensaje SOAP de operación recibido en
+              /services/facturaElectronicaService: ${body}
+            loggingLevel: "OFF"
+            logName: facturaelectronica.operaciones
+        - choice:
+            id: choice-6878
+            when:
+              - id: when-0b71
+                description: InsertarDocumento
+                expression:
+                  xpath:
+                    id: xpath-f286
+                    expression: >-
+                      /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='InsertarDocumento']
+                steps:
+                  - setProperty:
+                      id: setProperty-d306
+                      description: empresa
+                      name: numeroEmpresa
+                      expression:
+                        xpath:
+                          id: xpath-ea8a
+                          expression: >-
+                            string(/soapenv:Envelope/soapenv:Body/tem:InsertarDocumento/tem:empresa)
+                          namespace:
+                            - key: soapenv
+                              value: http://schemas.xmlsoap.org/soap/envelope/
+                            - key: tem
+                              value: http://tempuri.org/
+                          resultType: java.lang.String
+                  - setProperty:
+                      id: setProperty-d67e
+                      name: extractedXmlContent
+                      expression:
+                        xpath:
+                          id: xpath-2917
+                          expression: >-
+                            string(/soapenv:Envelope/soapenv:Body/tem:InsertarDocumento/tem:xml)
+                          namespace:
+                            - key: soapenv
+                              value: http://schemas.xmlsoap.org/soap/envelope/
+                            - key: tem
+                              value: http://tempuri.org/
+                          resultType: java.lang.String
+                  - setBody:
+                      id: setBody-c713
+                      expression:
+                        simple:
+                          id: simple-a1ac
+                          expression: ${exchangeProperty.extractedXmlContent}
+                  - convertBodyTo:
+                      id: convertBodyTo-6378
+                      type: java.lang.String
+                  - setBody:
+                      id: setBody-1af2
+                      expression:
+                        simple:
+                          id: simple-dfb1
+                          expression: "${body.trim().replaceFirst('^[\\\\s\\\\S]*?<\\\\?xml[^?]+\\\\?>', '')}\r\n\r\n"
+                  - log:
+                      id: log-973a
+                      message: ${body}
+                      loggingLevel: "OFF"
+                  - to:
+                      id: to-4d65
+                      uri: direct
+                      parameters:
+                        name: procesarFacturaXml
+                  - log:
+                      id: log-a8c8
+                      message: ${body}
+                      loggingLevel: INFO
+              - id: when-1c94
+                description: EstadoCompletado
+                expression:
+                  xpath:
+                    id: xpath-aff6
+                    expression: >-
+                      /*[local-name()='Envelope']/*[local-name()='Body']/*[local-name()='IngresarEstadoCompletado']
+                steps:
+                  - setBody:
+                      id: setBody-fdff
+                      expression:
+                        constant:
+                          id: constant-609b
+                          expression: "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <s:Body>\r\n        <IngresarEstadoCompletadoResponse xmlns=\"http://tempuri.org/\" />\r\n    </s:Body>\r\n</s:Envelope>"
+            otherwise:
+              id: otherwise-3151
+              description: Operación no reconocida
+              steps:
+                - setProperty:
+                    id: setProperty-210e
+                    name: CamelHttpResponseCode
+                    expression:
+                      constant:
+                        id: constant-63ce
+                        expression: "400 # Bad Request"
+                - setHeader:
+                    id: setHeader-c168
+                    name: Content-Type
+                    expression:
+                      constant:
+                        id: constant-ab96
+                        expression: "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n    <s:Body>\r\n        <s:Fault>\r\n            <faultcode>soapenv:Client</faultcode>\r\n            <faultstring>Operación no soportada o mensaje inválido</faultstring>\r\n            <detail>Detalle del error: La operación solicitada no fue reconocida.</detail>\r\n        </s:Fault>\r\n    </s:Body>\r\n</s:Envelope>"
+                - setHeader:
+                    id: setHeader-6724
+                    name: Content-Type
+                    expression:
+                      constant:
+                        id: constant-9267
+                        expression: text/xml; charset=utf-8
+- route:
+    id: route-eee3
+    nodePrefixId: route-e95
+    from:
+      id: from-procesarFacturaXml
+      uri: direct
+      parameters:
+        name: procesarFacturaXml
+      steps:
+        - unmarshal:
+            id: unmarshal-a2b1
+            jacksonXml:
+              id: jacksonXml-13ff
+        - marshal:
+            id: marshal-69ea
+            json:
+              id: json-640b
+              prettyPrint: true
+              library: Jackson
+        - to:
+            id: to-198e
+            uri: mongodb
+            parameters:
+              connectionBean: mongo-mongo-1
+              collection: xml_recibido
+              createCollection: false
+              hosts: 10.10.206.17:27017
+              database: fel_cr
+              operation: insert
+              connectionUriString: mongodb://root:mongoPassword@10.10.206.27:27017/
+        - marshal:
+            id: marshal-5a5a
+            json:
+              id: json-6832
+              library: Jackson
+        - convertBodyTo:
+            id: convertBodyTo-93ee
+            type: java.lang.String
+        - setProperty:
+            id: setProperty-c210
+            description: NumeroFactura
+            name: NumeroFactura
+            expression:
+              js:
+                id: js-33f0
+                expression: "(function() {\r\n    var obj = JSON.parse(body);\r\n    return obj.FacturaElectronicaXML != undefined ? obj.FacturaElectronicaXML.Encabezado.NumeroFactura : obj.FacturaRequest.Encabezado.NumeroFactura;\r\n})()\r\n"
+        - setHeader:
+            id: setHeader-c009
+            description: Set Header Auth
+            name: CamelHttpQuery
+            expression:
+              js:
+                id: js-d758
+                expression: "var obj = JSON.parse(body);\r\nvar params = [];\r\n\r\n\r\nvar pNumCuenta = obj.FacturaElectronicaXML.Autenticacion.numCuenta;\r\nvar pUsuario = obj.FacturaElectronicaXML.Autenticacion.usuario;\r\nvar pClave = obj.FacturaElectronicaXML.Autenticacion.clave;\r\n\r\nif (pNumCuenta != null && pNumCuenta.toString().trim() !== \"\") {\r\n    params.push(\"pNumCuenta=\" + pNumCuenta);\r\n}\r\nif (pUsuario != null && pUsuario.toString().trim() !== \"\") {\r\n    params.push(\"pUsuario=\" + pUsuario);\r\n}\r\nif (pClave != null && pClave.toString().trim() !== \"\") {\r\n    params.push(\"pClave=\" + encodeURIComponent(pClave));\r\n}\r\n\r\nparams.join(\"&\");"
+        - setHeader:
+            id: setHeader-8a24
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-d990
+                expression: application/json
+        - removeHeaders:
+            id: removeHeaders-b6fc
+            description: Eliminando headers
+            pattern: (CamelHttpUri|CamelHttpPath|Host)
+        - setProperty:
+            id: setProperty-d16f
+            description: Asigna valores a FacturaResquest
+            name: FacturaRequest
+            expression:
+              js:
+                id: js-ba54
+                expression: "(function() {\r\n    function parseExoneracion(exo) {\r\n        if (exo && exo.MontoImpuesto !== '' && exo.NumeroDocumento !== '') {\r\n            const tmp = {\r\n                TipoDocExo: exo.TipoDocumento,\r\n                NumeroExo: exo.NumeroDocumento,\r\n                NombreInstitucion: exo.NombreInstitucion,\r\n                FechaExoneracion: exo.FechaEmision,\r\n                MontoExonerado: Number(exo.MontoImpuesto),\r\n                PorcentajeExonerado: Number(exo.PorcentajeCompra)\r\n            };\r\n\r\n            const requiereArticulo = ['02','03','06','07', '08'];\r\n\r\n            if(requiereArticulo.includes(exo.TipoDocumento)){\r\n                tmp.Articulo = exo.Articulo;\r\n                tmp.Inciso = exo.Inciso;\r\n            }\r\n\r\n            return tmp;\r\n        }\r\n        return undefined;\r\n    }\r\n\r\n    function parseImpuesto(impuesto) {\r\n        const obj = {\r\n            CodigoImp: Number(impuesto.CodigoImpuesto),\r\n            CodigoTarifa: Number(impuesto.CodigoTarifa),\r\n            MontoImp: Number(impuesto.MontoImpuesto)\r\n        };\r\n        if (impuesto.PorcentajeImp && Number(impuesto.PorcentajeImp) !== 0) {\r\n            obj.PorcentajeImp = Number(impuesto.PorcentajeImp);\r\n        }\r\n        if(impuesto.PorcentajeImpuesto && Number(impuesto.PorcentajeImpuesto) !== 0){\r\n            obj.PorcentajeImp = Number(impuesto.PorcentajeImpuesto);\r\n        }\r\n        const exo = parseExoneracion(impuesto.Exoneracion);\r\n        if (exo) {\r\n            obj.Exoneracion = exo;\r\n        }\r\n        return obj;\r\n    }\r\n\r\n    function parseLinea(linea) {\r\n        const impuestos = [];\r\n        const impuestosData = linea.Impuestos.Impuesto;\r\n\r\n        if (Array.isArray(impuestosData)) {\r\n            impuestosData.forEach(impuesto => impuestos.push(parseImpuesto(impuesto)));\r\n        } else if (typeof impuestosData === \"object\" && impuestosData !== null) {\r\n            impuestos.push(parseImpuesto(impuestosData));\r\n        }\r\n\r\n        const lineaResult = {\r\n            CodTipo: [linea.CodigoTipo],\r\n            Codigo: linea.Codigo,\r\n            CodProdServ: [linea.CodigoProducto],\r\n            Cantidad: Number(linea.Cantidad),\r\n            UnidadMedida: Number(linea.UnidadMedida),\r\n            Descripcion: linea.DetalleMerc,\r\n            PrecioUnitario: Number(linea.PrecioUnitario),\r\n            Impuestos: impuestos\r\n        };\r\n\r\n        if(linea.PartidaArancelaria !== '') {\r\n            lineaResult.PartidaArancelaria = linea.PartidaArancelaria;\r\n        }\r\n\r\n        return lineaResult;\r\n    }\r\n\r\n    function incluirSiNoCero(valor) {\r\n        return Number(valor) !== 0 ? Number(valor) : undefined;\r\n    }\r\n\r\n    var facturaRequest = {};\r\n    var obj = JSON.parse(body);\r\n    var factura = obj.FacturaElectronicaXML;\r\n    var masDecimales = ['4300', '4400'];\r\n\r\n    facturaRequest.numCuenta = Number(factura.Autenticacion.numCuenta);\r\n    facturaRequest.Documentos = [{\r\n        Encabezado: {\r\n            NumeroFactura: factura.Encabezado.NumeroFactura,\r\n            TipoDoc: Number(factura.Encabezado.TipoDoc),\r\n            SituacionEnvio: Number(factura.Encabezado.SituacionEnvio),\r\n            CantDeci: masDecimales.includes(exchange.getProperty(\"numeroEmpresa\")) ? 5 : 4,\r\n            Sucursal: Number(factura.Encabezado.Sucursal),\r\n            CodigoActividad: factura.Encabezado.CodigoActividad.toString(),\r\n            Terminal: Number(factura.Encabezado.Terminal),\r\n            Moneda: Number(factura.Encabezado.Moneda),\r\n            CondicionVenta: Number(factura.Encabezado.CondicionVenta),\r\n            TipoCambio: Number(factura.Encabezado.TipoCambio).toFixed(5),\r\n            MedioPago: [\r\n                factura.Encabezado.idMedioPago\r\n            ],\r\n            PlazoCredito: Number(factura.Encabezado.DiasCredito),\r\n            Receptor: {\r\n                TipoIdent: Number(factura.Encabezado.Receptor.TipoIdentificacion),\r\n                Identificacion: factura.Encabezado.Receptor.IdentificacionReceptor,\r\n                Nombre: factura.Encabezado.Receptor.NombreReceptor,\r\n                Correo: factura.Encabezado.Receptor.CorreoElectronicoReceptor,\r\n                ActividadEconomica: factura.Encabezado.Receptor.ActividadEconomica,\r\n                Provincia: factura.Encabezado.Receptor.idProvincia,\r\n                Canton: factura.Encabezado.Receptor.idCanton,\r\n                Distrito: factura.Encabezado.Receptor.idDistrito,\r\n                Barrio: factura.Encabezado.Receptor.idBarrio,\r\n                Direccion: factura.Encabezado.Receptor.DireccionReceptor,\r\n                AreaTelefono: factura.Encabezado.Receptor.NumeroAreaTelReceptor,\r\n                NumTelefono: factura.Encabezado.Receptor.NumeroTelReceptor,\r\n                Copia: factura.Encabezado.Receptor.CopiaCortesia\r\n            }\r\n        },\r\n        Lineas: [],\r\n        Totales: Object.fromEntries(Object.entries({\r\n            TotalServGravado: incluirSiNoCero(factura.Totales.TotalServGravados),\r\n            TotalServExento: incluirSiNoCero(factura.Totales.TotalServExentos),\r\n            TotalServExonerado: incluirSiNoCero(factura.Totales.TotalServExonerados),\r\n            TotalMercaGravada: Number(factura.Totales.TotalMercanciasGravadas),\r\n            TotalMercaExenta: Number(factura.Totales.TotalMercanciasExentas),\r\n            TotalMercaExonerada: Number(factura.Totales.TotalMercanciasExoneradas),\r\n            TotalGravado: Number(factura.Totales.TotalGravado),\r\n            TotalExento: Number(factura.Totales.TotalExento),\r\n            TotalExonerado: Number(factura.Totales.TotalExonerado),\r\n            TotalOtrosCargos: factura.Totales.TotalOtrosCargos,\r\n            TotalVenta: Number(factura.Totales.TotalVenta),\r\n            TotalVentaNeta: Number(factura.Totales.TotalVentaNeta),\r\n            TotalImpuesto: Number(factura.Totales.TotalImpuesto),\r\n            TotalImpVenta: Number(factura.Totales.TotalImpuesto),\r\n            TotalImpOtros: 0,\r\n            TotalComprobante: Number(factura.Totales.TotalComprobante)\r\n        }).filter(([_, v]) => v !== undefined)),\r\n        Extras: {\r\n            EsVersion4_4: true\r\n        },\r\n        ParametrosAdicionales: {\r\n            FormatoPDF: factura.ParametrosAdicionales.FormatoPDF1,\r\n            Prm0: factura.ParametrosAdicionales.Param0,\r\n            Prm1: factura.ParametrosAdicionales.Param1,\r\n            Prm2: factura.ParametrosAdicionales.Param2,\r\n            Prm3: factura.ParametrosAdicionales.Param3,\r\n            Prm4: factura.ParametrosAdicionales.Param4,\r\n            Prm5: factura.ParametrosAdicionales.Param5,\r\n            Prm6: factura.ParametrosAdicionales.Param6,\r\n            Prm7: factura.ParametrosAdicionales.Param7,\r\n            Prm8: factura.ParametrosAdicionales.Param8,\r\n            Prm9: factura.ParametrosAdicionales.Param9,\r\n            Prm10: factura.ParametrosAdicionales.Param10,\r\n            Prm11: factura.ParametrosAdicionales.Param11,\r\n            Prm12: factura.ParametrosAdicionales.Param12,\r\n            Prm13: factura.ParametrosAdicionales.Param13,\r\n            Prm14: factura.ParametrosAdicionales.Param14,\r\n            Prm15: factura.ParametrosAdicionales.Param15,\r\n            Prm16: factura.ParametrosAdicionales.Param16,\r\n            Prm17: factura.ParametrosAdicionales.Param17,\r\n            Prm18: factura.ParametrosAdicionales.Param18,\r\n            Prm19: factura.ParametrosAdicionales.Param19,\r\n            Prm22: factura.ParametrosAdicionales.Param22\r\n        }\r\n    }];\r\n\r\n    if (\r\n        factura.InformacionDeReferencia &&\r\n        factura.InformacionDeReferencia.Referencia &&\r\n        (\r\n            factura.InformacionDeReferencia.Referencia.TpoDocRef &&\r\n            factura.InformacionDeReferencia.Referencia.NumeroReferencia &&\r\n            factura.InformacionDeReferencia.Referencia.FechaRef\r\n        )\r\n    ) {\r\n        facturaRequest.Documentos[0].Referencia = {\r\n            TipoDocRef: factura.InformacionDeReferencia.Referencia.TpoDocRef,\r\n            TipoDocRefOTRO: factura.InformacionDeReferencia.Referencia.TipoDocRefOTRO,\r\n            NumeroRef: factura.InformacionDeReferencia.Referencia.NumeroReferencia,\r\n            AccionRef: factura.InformacionDeReferencia.Referencia.CodigoReferencia,\r\n            CodigoReferenciaOTRO: factura.InformacionDeReferencia.Referencia.CodigoReferenciaOTRO,\r\n            FechaRef: factura.InformacionDeReferencia.Referencia.FechaRef,\r\n            RazonNota: factura.InformacionDeReferencia.Referencia.RazonNota,\r\n        };\r\n    }\r\n\r\n    const lineasData = factura.Detalle.Linea;\r\n    if (Array.isArray(lineasData)) {\r\n        facturaRequest.Documentos[0].Lineas = lineasData.map(parseLinea);\r\n    } else if (typeof lineasData === \"object\" && lineasData !== null) {\r\n        facturaRequest.Documentos[0].Lineas.push(parseLinea(lineasData));\r\n    }\r\n\r\n    return JSON.stringify(facturaRequest);\r\n})();\r\n"
+        - setBody:
+            id: setBody-ae26
+            description: Generando JSON como body
+            expression:
+              js:
+                id: js-a6e0
+                expression: exchange.getProperty("FacturaRequest")
+        - log:
+            id: log-10fa
+            message: ${body}
+            loggingLevel: INFO
+        - convertBodyTo:
+            id: convertBodyTo-566d
+            description: Convirtiendo a Body
+            type: java.lang.String
+        - to:
+            id: to-c713
+            uri: mongodb
+            parameters:
+              connectionBean: mongo-mongo-1
+              collection: xml_procesado
+              createCollection: false
+              hosts: 10.10.206.17:27017
+              database: fel_cr
+              operation: insert
+              connectionUriString: mongodb://root:mongoPassword@10.10.206.27:27017/
+        - marshal:
+            id: marshal-0a4c
+            json:
+              id: json-9987
+              library: Jackson
+        - to:
+            id: to-0066
+            uri: https
+            parameters:
+              httpUri: >-
+                https://pruebas.gticr.com/AplicacionFEPruebas/ApiCargaFactura/api/Documentos/CargarDocumento
+              httpMethod: POST
+              throwExceptionOnFailure: false
+        - log:
+            id: log-21fe
+            message: ${body}
+            loggingLevel: INFO
+        - unmarshal:
+            id: unmarshal-a4f8
+            json:
+              id: json-8368
+              library: Jackson
+        - to:
+            id: to-9793
+            uri: mongodb
+            parameters:
+              connectionBean: mongo-mongo-1
+              collection: respuesta_proveedor
+              createCollection: false
+              hosts: 10.10.206.17:27017
+              database: fel_cr
+              operation: insert
+              connectionUriString: mongodb://root:mongoPassword@10.10.206.27:27017/
+        - marshal:
+            id: marshal-2cc6
+            json:
+              id: json-ea04
+              library: Jackson
+        - convertBodyTo:
+            id: convertBodyTo-62ea
+            description: Convirtiendo Response a body
+            type: java.lang.String
+        - setProperty:
+            id: setProperty-c7d6
+            description: Procesando Response
+            name: Response
+            expression:
+              js:
+                id: js-a440
+                expression: "(function() {\r\n    var obj = JSON.parse(body)\r\n    var response = null\r\n\r\n    console.log('-----------------')\r\n    console.log(JSON.stringify(obj))\r\n\r\n    if(obj.Estado == 202) {\r\n        if(obj.Respuestas[0].Codigo == 0) {\r\n            var tmp = {\r\n                NumDocumento: obj.Respuestas[0].NumDoc,\r\n                IdCarga: obj.Respuestas[0].idDocumento,\r\n                NumFacturaInterno: exchange.getProperty(\"NumeroFactura\"),\r\n                ClaveNumerica: obj.Respuestas[0].ClaveNumerica,\r\n                NumConsecutivoCompr: obj.Respuestas[0].Consecutivo,\r\n                CodigoError: obj.Respuestas[0].Codigo,\r\n                DescripcionError: obj.Respuestas[0].Error\r\n            }\r\n        } else {\r\n            var tmp = {\r\n                NumDocumento: obj.Respuestas[0].NumDoc,\r\n                IdCarga: obj.Respuestas[0].idDocumento,\r\n                CodigoError: obj.Respuestas[0].Codigo,\r\n                DescripcionError: obj.Respuestas[0].Error + ' ' + obj.Respuestas[0].Detalle\r\n            }\r\n        }\r\n    } else {\r\n        var tmp = {\r\n            NumDocumento: 0,\r\n            IdCarga: 0, \r\n            CodigoError: obj.Estado,\r\n            DescripcionError: obj.Error\r\n        }\r\n    }\r\n\r\n\r\n    \r\n    response = tmp\r\n    return JSON.stringify(response);\r\n})()"
+        - setBody:
+            id: setBody-4681
+            description: Configurando response en body
+            expression:
+              js:
+                id: js-5b66
+                expression: exchange.getProperty("Response")
+        - convertBodyTo:
+            id: convertBodyTo-0b9b
+            description: Convirtiendo a body
+            type: java.lang.String
+        - unmarshal:
+            id: unmarshal-2db8
+            description: Generando POJO desde Body
+            json:
+              id: json-b23f
+              prettyPrint: true
+              library: Jackson
+        - marshal:
+            id: marshal-4bbc
+            description: Transformando POJO a XML
+            jacksonXml:
+              id: jacksonXml-557f
+              prettyPrint: true
+        - convertBodyTo:
+            id: convertBodyTo-7ac5
+            description: Convirtiendo XML a Body
+            type: java.lang.String
+        - setProperty:
+            id: setProperty-1df8
+            description: Modificando XML Response
+            name: xmlResponse
+            expression:
+              js:
+                id: js-dd58
+                expression: "(function() {\r\n    \r\n    var xmlResult = body;\r\n    xmlResult = xmlResult.replace(\"<LinkedHashMap>\", '<FacturaElectronicaXML>');\r\n    xmlResult = xmlResult.replace(\"</LinkedHashMap>\", \"</FacturaElectronicaXML>\");\r\n    \r\n    var xmlResponse =  `<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n    <s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\">\r\n        <s:Body>\r\n            <InsertarDocumentoResponse xmlns=\"http://tempuri.org/\">\r\n                <InsertarDocumentoResult xmlns:a=\"http://schemas.datacontract.org/2004/07/pFacturaElectronica.Serializable\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n                    <a:correlativo>1</a:correlativo>\r\n                    <a:xmlRespuesta><![CDATA[<root xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">` + xmlResult + `</root>]]></a:xmlRespuesta>\r\n                </InsertarDocumentoResult>\r\n            </InsertarDocumentoResponse>\r\n        </s:Body>\r\n    </s:Envelope>`\r\n    \r\n    return xmlResponse;\r\n})()"
+        - setProperty:
+            id: setProperty-12a6
+            name: HeaderContent
+            expression:
+              js:
+                id: js-2601
+                expression: "(function() {\r\n    var xmlResponse = exchange.getProperty(\"xmlResponse\");\r\n\r\n    function utf8Length(str) {\r\n        var bytes = 0;\r\n        for (var i = 0; i < str.length; i++) {\r\n            var codePoint = str.charCodeAt(i);\r\n            if (codePoint < 0x80) {\r\n                bytes += 1;\r\n            } else if (codePoint < 0x800) {\r\n                bytes += 2;\r\n            } else if (codePoint < 0x10000) {\r\n                bytes += 3;\r\n            } else {\r\n                bytes += 4;\r\n                i++; // surrogate pair\r\n            }\r\n        }\r\n        return bytes;\r\n    }\r\n\r\n    var contentLength = utf8Length(xmlResponse);\r\n    \r\n    return contentLength.toString();\r\n})()"
+        - setHeaders:
+            id: setHeaders-d234
+            description: Agregando Headers
+            headers:
+              - id: setHeader-929d
+                description: ContentType
+                name: Content-Type
+                expression:
+                  constant:
+                    id: constant-e380
+                    expression: text/xml; charset=UTF-8
+              - id: setHeader-f324
+                name: Connection
+                expression:
+                  constant:
+                    id: constant-14b4
+                    expression: close
+              - id: setHeader-2ac8
+                name: Exchange.HTTP_RESPONSE_CODE
+                expression:
+                  constant:
+                    id: constant-eac3
+                    expression: "200"
+        - removeHeaders:
+            id: removeHeaders-a5ba
+            description: Removiendo Headers
+            pattern: >-
+              (Transfer-Encoding|Access-Control-Allow-Headers|Access-Control-Allow-Origin|Referrer-Policy|X-Frame-Options|X-Content-Type-Options|X-XSS-Protection)
+        - setBody:
+            id: setBody-9300
+            expression:
+              groovy:
+                id: groovy-b73f
+                expression: exchange.getProperty("xmlResponse")
+        - convertBodyTo:
+            id: convertBodyTo-1494
+            description: Retornando respuesta esperada
+            type: java.lang.String
+        - log:
+            id: log-f71a
+            message: ${body}
+            loggingLevel: INFO

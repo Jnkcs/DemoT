@@ -1,0 +1,8 @@
+services:
+  devsapfelcr:
+    image: devsapfelcr
+    restart: always
+    ports:
+      - "8108:8080"
+    networks:
+      - karavan
