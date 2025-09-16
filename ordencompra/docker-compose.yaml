@@ -1,0 +1,8 @@
+services:
+  ordencompra:
+    image: ordencompra
+    restart: always
+    ports:
+      - "8105:8080"
+    networks:
+      - karavan
