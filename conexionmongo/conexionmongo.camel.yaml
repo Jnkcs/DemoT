@@ -1,11 +1,3 @@
-- beans:
-    - name: PostgresDatabase
-      type: "#class:org.apache.commons.dbcp2.BasicDataSource"
-      properties:
-        username: "{{postgres.dev.username}}"
-        password: "{{postgres.dev.password}}"
-        url: jdbc:postgresql://karavan-postgres:5432/karavan
-        driverClassName: org.postgresql.Driver
 - route:
     id: route-3c8e
     nodePrefixId: route-2a9
@@ -32,3 +24,11 @@
             loggingLevel: INFO
         - stop:
             id: stop-36a7
+- beans:
+    - name: PostgresDatabase
+      type: "#class:org.apache.commons.dbcp2.BasicDataSource"
+      properties:
+        username: "{{postgres.dev.username}}"
+        password: "{{postgres.dev.password}}"
+        url: jdbc:postgresql://karavan-postgres:5432/karavan
+        driverClassName: org.postgresql.Driver
