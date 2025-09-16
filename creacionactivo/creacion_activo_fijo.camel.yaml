@@ -77,10 +77,6 @@
               authPassword: "{{sap.soap.password}}"
               disableStreamCache: true
               authenticationPreemptive: true
-        - log:
-            id: log-31cc
-            message: FUNCIONAAA ${body}
-            loggingLevel: INFO
         - to:
             id: to-b696
             description: XML a JSON
