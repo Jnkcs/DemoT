@@ -1,0 +1,8 @@
+services:
+  devpocsipsmart:
+    image: devpocsipsmart
+    restart: always
+    ports:
+      - "8109:8080"
+    networks:
+      - karavan
