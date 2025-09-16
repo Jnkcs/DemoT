@@ -1,0 +1,8 @@
+services:
+  conexionpostgresql:
+    image: conexionpostgresql
+    restart: always
+    ports:
+      - "8106:8080"
+    networks:
+      - karavan

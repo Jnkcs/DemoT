@@ -1,0 +1,34 @@
+- route:
+    id: route-3c8e
+    nodePrefixId: route-2a9
+    from:
+      id: from-a4df
+      uri: timer
+      parameters:
+        timerName: myTimer?period=9000
+      steps:
+        - setBody:
+            id: setBody-c87a
+            expression:
+              constant:
+                id: constant-61bd
+                expression: SELECT * FROM empleados;
+        - to:
+            id: to-21e8
+            uri: jdbc
+            parameters:
+              dataSourceName: PostgresDatabase
+        - log:
+            id: log-9137
+            message: ${body}
+            loggingLevel: INFO
+        - stop:
+            id: stop-36a7
+- beans:
+    - name: PostgresDatabase
+      type: "#class:org.apache.commons.dbcp2.BasicDataSource"
+      properties:
+        username: "{{postgres.dev.username}}"
+        password: "{{postgres.dev.password}}"
+        url: jdbc:postgresql://karavan-postgres:5432/karavan
+        driverClassName: org.postgresql.Driver
