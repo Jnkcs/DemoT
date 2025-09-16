@@ -42,6 +42,13 @@
         - log:
             id: log-d756
             message: ${body}
+        - setHeader:
+            id: setHeader-5830
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-310f
+                expression: text/xml; charset=utf-8
         - to:
             id: to-1dbb
             uri: http
