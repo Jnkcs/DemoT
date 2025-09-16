@@ -1,8 +1,0 @@
-services:
-  conexionmongo:
-    image: conexionmongo
-    restart: always
-    ports:
-      - "8092:8080"
-    networks:
-      - karavan
