@@ -23,12 +23,20 @@
             uri: kamelet:xj-identity-action
             parameters:
               direction: JSON2XML
+        - log:
+            id: log-b21a
+            message: ${body}
+            loggingLevel: INFO
         - to:
             id: to-6edb
             description: Generación de XML
             uri: xslt
             parameters:
               resourceUri: classpath:purchase_order.xsl
+        - log:
+            id: log-99c8
+            message: ${body}
+            loggingLevel: INFO
         - setBody:
             id: setBody-4553
             description: "Modificación de cuerpo: urn"
@@ -40,22 +48,48 @@
                   '<urn:PurchaseOrderCreateFromData1>').replaceAll('</PurchaseOrderCreateFromData1>',
                   '</urn:PurchaseOrderCreateFromData1>')}
         - log:
-            id: log-d756
+            id: log-192a
             message: ${body}
+            loggingLevel: INFO
+        - setBody:
+            id: setBody-0a7b
+            description: SOAP
+            expression:
+              simple:
+                id: simple-81cf
+                expression: "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:sap-com:document:sap:soap:functions:mc-style\">\r\n   <soapenv:Header/>\r\n   <soapenv:Body>\r\n   ${body}\r\n   </soapenv:Body>\r\n</soapenv:Envelope>"
+        - setHeader:
+            id: setHeader-7595
+            name: SOAPAction
+            expression:
+              constant:
+                id: constant-c0df
+                expression: >-
+                  "urn:sap-com:document:sap:soap:functions:mc-style:PurchaseOrderCreateFromData1"
+        - log:
+            id: log-ec25
+            message: ${body}
+            loggingLevel: INFO
+        - removeHeaders:
+            id: removeHeaders-8919
+            pattern: CamelHttp*
         - setHeader:
             id: setHeader-5830
             name: Content-Type
             expression:
-              constant:
-                id: constant-310f
+              simple:
+                id: simple-2205
                 expression: text/xml; charset=utf-8
+        - log:
+            id: log-d756
+            message: ${body}
         - to:
             id: to-1dbb
             uri: http
             parameters:
               bridgeEndpoint: true
               httpUri: >-
-                http://spgtsapqlt.disagro.corp/sap/bc/srt/rfc/sap/zws_purchase_order/110/zws_purchase_order/zws_purchase_order?sap-client=110
+                spgtsapqlt.disagro.corp/sap/bc/srt/rfc/sap/zws_purchase_order/110/zws_purchase_order/zws_purchase_order
               httpMethod: POST
               authMethodPriority: Basic
               authUsername: "{{sap.soap.username}}"
