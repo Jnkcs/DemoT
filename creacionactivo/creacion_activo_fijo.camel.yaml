@@ -23,20 +23,12 @@
             uri: kamelet:xj-identity-action
             parameters:
               direction: JSON2XML
-        - log:
-            id: log-b21a
-            message: ${body}
-            loggingLevel: INFO
         - to:
             id: to-6edb
             description: Generación de XML
             uri: xslt
             parameters:
               resourceUri: classpath:purchase_order.xsl
-        - log:
-            id: log-99c8
-            message: ${body}
-            loggingLevel: INFO
         - setBody:
             id: setBody-4553
             description: "Modificación de cuerpo: urn"
@@ -47,13 +39,9 @@
                   ${body.replaceAll('<PurchaseOrderCreateFromData1>',
                   '<urn:PurchaseOrderCreateFromData1>').replaceAll('</PurchaseOrderCreateFromData1>',
                   '</urn:PurchaseOrderCreateFromData1>')}
-        - log:
-            id: log-192a
-            message: ${body}
-            loggingLevel: INFO
         - setBody:
             id: setBody-0a7b
-            description: SOAP
+            description: SOAP envelope
             expression:
               simple:
                 id: simple-81cf
@@ -66,10 +54,6 @@
                 id: constant-c0df
                 expression: >-
                   "urn:sap-com:document:sap:soap:functions:mc-style:PurchaseOrderCreateFromData1"
-        - log:
-            id: log-ec25
-            message: ${body}
-            loggingLevel: INFO
         - removeHeaders:
             id: removeHeaders-8919
             pattern: CamelHttp*
@@ -80,9 +64,6 @@
               simple:
                 id: simple-2205
                 expression: text/xml; charset=utf-8
-        - log:
-            id: log-d756
-            message: ${body}
         - to:
             id: to-1dbb
             uri: http
@@ -100,3 +81,12 @@
             id: log-31cc
             message: FUNCIONAAA ${body}
             loggingLevel: INFO
+        - to:
+            id: to-b696
+            description: XML a JSON
+            uri: kamelet:xj-identity-action
+            parameters:
+              direction: XML2JSON
+        - log:
+            id: log-ed0e
+            message: ${body}
