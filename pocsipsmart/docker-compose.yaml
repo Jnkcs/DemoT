@@ -1,8 +1,0 @@
-services:
-  pocsipsmart:
-    image: pocsipsmart
-    restart: always
-    ports:
-      - "8099:8080"
-    networks:
-      - karavan
