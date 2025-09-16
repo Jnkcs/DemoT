@@ -1,0 +1,8 @@
+services:
+  testdocker:
+    image: testdocker
+    restart: always
+    ports:
+      - "8107:8080"
+    networks:
+      - karavan

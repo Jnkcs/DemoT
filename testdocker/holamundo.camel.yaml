@@ -1,0 +1,20 @@
+- route:
+    id: route-1860
+    nodePrefixId: route-578
+    from:
+      id: from-5fa8
+      uri: timer
+      parameters:
+        timerName: Holamundo
+        delay: "10000"
+      steps:
+        - setBody:
+            id: setBody-c665
+            expression:
+              constant:
+                id: constant-ca32
+                expression: Hola
+        - log:
+            id: log-4af4
+            message: ${body}
+            loggingLevel: INFO
