@@ -17,20 +17,45 @@
       parameters:
         name: ActivoFijo
       steps:
-        - log:
-            id: log-1892
-            message: ${body}
-            loggingLevel: INFO
         - to:
             id: to-6dc8
+            description: JSON a XML
             uri: kamelet:xj-identity-action
             parameters:
               direction: JSON2XML
         - to:
             id: to-6edb
+            description: Generación de XML
             uri: xslt
             parameters:
               resourceUri: classpath:purchase_order.xsl
+        - setBody:
+            id: setBody-4553
+            description: "Modificación de cuerpo: urn"
+            expression:
+              simple:
+                id: simple-6f99
+                expression: >-
+                  ${body.replaceAll('<PurchaseOrderCreateFromData1>',
+                  '<urn:PurchaseOrderCreateFromData1>').replaceAll('</PurchaseOrderCreateFromData1>',
+                  '</urn:PurchaseOrderCreateFromData1>')}
         - log:
             id: log-d756
             message: ${body}
+        - to:
+            id: to-1dbb
+            uri: http
+            parameters:
+              bridgeEndpoint: true
+              httpUri: >-
+                http://spgtsapqlt.disagro.corp/sap/bc/srt/rfc/sap/zws_purchase_order/110/zws_purchase_order/zws_purchase_order?sap-client=110
+              httpMethod: POST
+              authMethodPriority: Basic
+              authUsername: "{{sap.soap.username}}"
+              authPassword: "{{sap.soap.password}}"
+              disableStreamCache: true
+              authenticationPreemptive: true
+        - log:
+            id: log-31cc
+            message: FUNCIONAAA ${body}
+            loggingLevel: INFO

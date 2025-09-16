@@ -1,100 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                xmlns:xj="http://camel.apache.org/component/xj"
-                exclude-result-prefixes="xj">
+<xsl:stylesheet version="1.0" 
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:xj="http://camel.apache.org/component/xj"
+    exclude-result-prefixes="xj">
     
-    <xsl:output method="xml" indent="yes" encoding="UTF-8"/>
+    <xsl:output method="xml" indent="yes" omit-xml-declaration="yes"/>
     
     <!-- Template principal -->
     <xsl:template match="/">
-        <xsl:apply-templates select="//object[@xj:name='PurchaseOrderCreateFromData1']"/>
+        <xsl:element name="PurchaseOrderCreateFromData1">
+            <xsl:apply-templates select="//object[@xj:name='PurchaseOrderCreateFromData1']"/>
+        </xsl:element>
     </xsl:template>
     
     <!-- Template para PurchaseOrderCreateFromData1 -->
     <xsl:template match="object[@xj:name='PurchaseOrderCreateFromData1']">
-        <PurchaseOrderCreateFromData1>
-            <!-- Procesar PoHeader -->
-            <xsl:apply-templates select="object[@xj:name='PoHeader']"/>
-            
-            <!-- Procesar PoHeaderX -->
-            <xsl:apply-templates select="object[@xj:name='PoHeaderX']"/>
-            
-            <!-- Procesar PoItem -->
-            <xsl:apply-templates select="object[@xj:name='PoItem']"/>
-            
-            <!-- Procesar PoItemX -->
-            <xsl:apply-templates select="object[@xj:name='PoItemX']"/>
-        </PurchaseOrderCreateFromData1>
+        <xsl:apply-templates select="object[@xj:name='PoHeader']"/>
+        <xsl:apply-templates select="object[@xj:name='PoHeaderX']"/>
+        <xsl:apply-templates select="object[@xj:name='PoItem']"/>
+        <xsl:apply-templates select="object[@xj:name='PoItemX']"/>
     </xsl:template>
     
     <!-- Template para PoHeader -->
     <xsl:template match="object[@xj:name='PoHeader']">
-        <PoHeader>
-            <DocType><xsl:value-of select="object[@xj:name='DocType']"/></DocType>
-            <Vendor><xsl:value-of select="object[@xj:name='Vendor']"/></Vendor>
-            <PurchOrg><xsl:value-of select="object[@xj:name='PurchOrg']"/></PurchOrg>
-            <PurGroup><xsl:value-of select="object[@xj:name='PurGroup']"/></PurGroup>
-            <CompCode><xsl:value-of select="object[@xj:name='CompCode']"/></CompCode>
-            <DocDate><xsl:value-of select="object[@xj:name='DocDate']"/></DocDate>
-            <Pmnttrms><xsl:value-of select="object[@xj:name='Pmnttrms']"/></Pmnttrms>
-            <Incoterms1><xsl:value-of select="object[@xj:name='Incoterms1']"/></Incoterms1>
-            <Currency><xsl:value-of select="object[@xj:name='Currency']"/></Currency>
-        </PoHeader>
+        <xsl:element name="PoHeader">
+            <xsl:apply-templates select="object"/>
+        </xsl:element>
     </xsl:template>
     
     <!-- Template para PoHeaderX -->
     <xsl:template match="object[@xj:name='PoHeaderX']">
-        <PoHeaderX>
-            <DocType><xsl:value-of select="object[@xj:name='DocType']"/></DocType>
-            <Vendor><xsl:value-of select="object[@xj:name='Vendor']"/></Vendor>
-            <PurchOrg><xsl:value-of select="object[@xj:name='PurchOrg']"/></PurchOrg>
-            <PurGroup><xsl:value-of select="object[@xj:name='PurGroup']"/></PurGroup>
-            <CompCode><xsl:value-of select="object[@xj:name='CompCode']"/></CompCode>
-            <DocDate><xsl:value-of select="object[@xj:name='DocDate']"/></DocDate>
-            <Pmnttrms><xsl:value-of select="object[@xj:name='Pmnttrms']"/></Pmnttrms>
-            <Incoterms1><xsl:value-of select="object[@xj:name='Incoterms1']"/></Incoterms1>
-            <Currency><xsl:value-of select="object[@xj:name='Currency']"/></Currency>
-        </PoHeaderX>
+        <xsl:element name="PoHeaderX">
+            <xsl:apply-templates select="object"/>
+        </xsl:element>
     </xsl:template>
     
     <!-- Template para PoItem -->
     <xsl:template match="object[@xj:name='PoItem']">
-        <PoItem>
-            <xsl:for-each select="object[@xj:name='item']/object">
-                <item>
-                    <PoItem><xsl:value-of select="object[@xj:name='PoItem']"/></PoItem>
-                    <Material><xsl:value-of select="object[@xj:name='Material']"/></Material>
-                    <Plant><xsl:value-of select="object[@xj:name='Plant']"/></Plant>
-                    <Quantity><xsl:value-of select="object[@xj:name='Quantity']"/></Quantity>
-                    <PoUnit><xsl:value-of select="object[@xj:name='PoUnit']"/></PoUnit>
-                    <NetPrice><xsl:value-of select="object[@xj:name='NetPrice']"/></NetPrice>
-                    <PriceUnit><xsl:value-of select="object[@xj:name='PriceUnit']"/></PriceUnit>
-                    <GrInd><xsl:value-of select="object[@xj:name='GrInd']"/></GrInd>
-                    <IrInd><xsl:value-of select="object[@xj:name='IrInd']"/></IrInd>
-                    <GrBasediv><xsl:value-of select="object[@xj:name='GrBasediv']"/></GrBasediv>
-                </item>
-            </xsl:for-each>
-        </PoItem>
+        <xsl:element name="PoItem">
+            <xsl:apply-templates select="object[@xj:name='item']/object"/>
+        </xsl:element>
     </xsl:template>
     
     <!-- Template para PoItemX -->
     <xsl:template match="object[@xj:name='PoItemX']">
-        <PoItemX>
-            <xsl:for-each select="object[@xj:name='item']/object">
-                <item>
-                    <PoItem><xsl:value-of select="object[@xj:name='PoItem']"/></PoItem>
-                    <Material><xsl:value-of select="object[@xj:name='Material']"/></Material>
-                    <Plant><xsl:value-of select="object[@xj:name='Plant']"/></Plant>
-                    <Quantity><xsl:value-of select="object[@xj:name='Quantity']"/></Quantity>
-                    <PoUnit><xsl:value-of select="object[@xj:name='PoUnit']"/></PoUnit>
-                    <NetPrice><xsl:value-of select="object[@xj:name='NetPrice']"/></NetPrice>
-                    <PriceUnit><xsl:value-of select="object[@xj:name='PriceUnit']"/></PriceUnit>
-                    <GrInd><xsl:value-of select="object[@xj:name='GrInd']"/></GrInd>
-                    <IrInd><xsl:value-of select="object[@xj:name='IrInd']"/></IrInd>
-                    <GrBasediv><xsl:value-of select="object[@xj:name='GrBasediv']"/></GrBasediv>
-                </item>
-            </xsl:for-each>
-        </PoItemX>
+        <xsl:element name="PoItemX">
+            <xsl:apply-templates select="object[@xj:name='item']/object"/>
+        </xsl:element>
+    </xsl:template>
+    
+    <!-- Template para items dentro del array -->
+    <xsl:template match="object[@xj:name='item']/object">
+        <xsl:element name="item">
+            <xsl:apply-templates select="object"/>
+        </xsl:element>
+    </xsl:template>
+    
+    <!-- Template genérico para elementos simples -->
+    <xsl:template match="object[@xj:type='string']">
+        <xsl:element name="{@xj:name}">
+            <xsl:value-of select="text()"/>
+        </xsl:element>
     </xsl:template>
     
 </xsl:stylesheet>
