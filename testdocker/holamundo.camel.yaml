@@ -5,15 +5,16 @@
       id: from-5fa8
       uri: timer
       parameters:
-        timerName: Holamundo
+        timerName: Hello World
         delay: "10000"
+        repeatCount: "10"
       steps:
         - setBody:
             id: setBody-c665
             expression:
               constant:
                 id: constant-ca32
-                expression: Hola
+                expression: Hello
         - log:
             id: log-4af4
             message: ${body}
