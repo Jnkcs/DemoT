@@ -279,24 +279,13 @@
             id: marshal-9eb6
             base64:
               id: base64-5738
-        - log:
-            id: log-1e2d
-            message: "\r\n\r\n${header.licenciaValue}\r\n${header.cerBytesValue}\r\n${header.keyBytesValue}\r\n${header.passBytesValue}\r\n${body}"
-            loggingLevel: INFO
-        - stop:
-            id: stop-9d9b
-        - marshal:
-            id: marshal-1a28
-            description: BASE 64
-            base64:
-              id: base64-283e
         - setBody:
             id: setBody-7686
             description: SOAP
             expression:
               simple:
                 id: simple-9763
-                expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:tem=\"http://tempuri.org/\" xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n\t<soap:Header>\r\n\t\t<a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/ComprobanteGenerarSAT40</a:Action>\r\n\t\t<a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n\r\n\t</soap:Header>\r\n\t<soap:Body>\r\n\t\t<tem:ComprobanteGenerarSAT40>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:licencia>i4ZoYqvJcyY4eytPFPZjzc8Bt5jOWKL-kOoe7AN8H7c=</tem:licencia>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:cerBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:keyBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:passBytes/>\r\n\t\t\t<!--Optional:-->\r\n\t\t\t<tem:xml>${body}</tem:xml>\r\n\t\t</tem:ComprobanteGenerarSAT40>\r\n\t</soap:Body>\r\n</soap:Envelope>\r\n"
+                expression: "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" \r\n               xmlns:tem=\"http://tempuri.org/\"\r\n               xmlns:a=\"http://www.w3.org/2005/08/addressing\">\r\n   <soap:Header>\r\n      <a:Action soap:mustUnderstand=\"1\">http://tempuri.org/IDetecno/ComprobanteGenerarSAT40</a:Action>\r\n      <a:To soap:mustUnderstand=\"1\">https://detecno-factura-electronica.com/Emision/cfdiWcfEmisionServicio40_Demo/Detecno.svc</a:To>\r\n     \r\n   </soap:Header>\r\n   \r\n   <soap:Body>\r\n      <tem:ComprobanteGenerarSAT40>\r\n         <!--Optional:-->\r\n         <tem:licencia>${header.licenciaValue}</tem:licencia>\r\n         <!--Optional:-->\r\n         <tem:cerBytes>${header.cerBytesValue}</tem:cerBytes>\r\n         <!--Optional:-->\r\n         <tem:keyBytes>${header.keyBytesValue}</tem:keyBytes>\r\n         <!--Optional:-->\r\n         <tem:passBytes>${header.passBytesValue}</tem:passBytes>\r\n         <!--Optional:-->\r\n         <tem:xml>${body}</tem:xml>\r\n      </tem:ComprobanteGenerarSAT40>\r\n   </soap:Body>\r\n</soap:Envelope>\r\n"
         - removeHeaders:
             id: removeHeaders-641e
             description: Headers
