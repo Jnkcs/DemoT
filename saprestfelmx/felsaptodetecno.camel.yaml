@@ -27,6 +27,7 @@
         produces: application/xml
 - route:
     id: BuscarPdf40
+    routeConfigurationId: rc-1396
     from:
       id: from-d8d8
       uri: direct
@@ -90,6 +91,7 @@
             loggingLevel: INFO
 - route:
     id: ComprobanteBuscar40
+    routeConfigurationId: rc-1396
     from:
       id: from-c914
       uri: direct
@@ -153,6 +155,7 @@
             loggingLevel: INFO
 - route:
     id: ComprobanteCancelar40
+    routeConfigurationId: rc-1396
     from:
       id: from-d1c6
       uri: direct
@@ -228,6 +231,7 @@
             loggingLevel: INFO
 - route:
     id: ComprobanteGenerarSAT40
+    routeConfigurationId: rc-1396
     from:
       id: from-9607
       uri: direct
@@ -312,3 +316,15 @@
             description: LOG
             message: ${body}
             loggingLevel: INFO
+- routeConfiguration:
+    id: rc-1396
+    errorHandler:
+      id: errorHandler-5e50
+      deadLetterChannel:
+        id: deadLetterChannel-aed6
+        deadLetterUri: log:deadLetterLog?level=ERROR
+        redeliveryPolicy:
+          id: redeliveryPolicy-b091
+          maximumRedeliveries: 3
+          redeliveryDelay: "5000"
+          backOffMultiplier: 2
