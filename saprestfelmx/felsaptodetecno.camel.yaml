@@ -33,22 +33,22 @@
       parameters:
         name: BuscarPdf40
       steps:
-        - setHeader:
-            id: setHeader-3ce0
-            description: xpath
-            name: licenciaValue
-            expression:
-              xpath:
-                id: xpath-d026
-                expression: //Comprobante_BuscarPdf40/licencia/text()
-        - setHeader:
-            id: setHeader-e5ba
-            description: xpath
-            name: facturaIdValue
-            expression:
-              xpath:
-                id: xpath-b5e4
-                expression: //Comprobante_BuscarPdf40/facturaId/text()
+        - setHeaders:
+            id: setHeaders-3517
+            description: Headers
+            headers:
+              - id: setHeader-0ba1
+                name: licenciaValue
+                expression:
+                  xpath:
+                    id: xpath-7795
+                    expression: //Comprobante_BuscarPdf40/licencia/text()
+              - id: setHeader-58b2
+                name: facturaIdValue
+                expression:
+                  xpath:
+                    id: xpath-f782
+                    expression: //Comprobante_BuscarPdf40/facturaId/text()
         - setBody:
             id: setBody-541e
             description: SOAP
@@ -84,11 +84,6 @@
             uri: xslt
             parameters:
               resourceUri: classpath:00_Xml_Response.xsl
-        - log:
-            id: log-4636
-            description: LOG
-            message: ${body}
-            loggingLevel: INFO
 - route:
     id: ComprobanteBuscar40
     from:
@@ -97,22 +92,22 @@
       parameters:
         name: ComprobanteBuscar40
       steps:
-        - setHeader:
-            id: setHeader-3ce1
-            description: xpath
-            name: licenciaValue
-            expression:
-              xpath:
-                id: xpath-d026
-                expression: //ComprobanteBuscar40/licencia/text()
-        - setHeader:
-            id: setHeader-e5b1
-            description: xpath
-            name: facturaIdValue
-            expression:
-              xpath:
-                id: xpath-b5e4
-                expression: //ComprobanteBuscar40/facturaId/text()
+        - setHeaders:
+            id: setHeaders-06dc
+            description: Headers
+            headers:
+              - id: setHeader-caa6
+                name: licenciaValue
+                expression:
+                  xpath:
+                    id: xpath-1fb9
+                    expression: //ComprobanteBuscar40/licencia/text()
+              - id: setHeader-06ab
+                name: facturaIdValue
+                expression:
+                  xpath:
+                    id: xpath-653c
+                    expression: //ComprobanteBuscar40/facturaId/text()
         - setBody:
             id: setBody-5411
             description: SOAP
@@ -148,11 +143,6 @@
             uri: xslt
             parameters:
               resourceUri: classpath:00_Xml_Response.xsl
-        - log:
-            id: log-46361
-            description: LOG
-            message: ${body}
-            loggingLevel: INFO
 - route:
     id: ComprobanteCancelar40
     from:
@@ -161,38 +151,34 @@
       parameters:
         name: ComprobanteCancelar40
       steps:
-        - setHeader:
-            id: setHeader-3ce12
-            description: xpath
-            name: licenciaValue
-            expression:
-              xpath:
-                id: xpath-d026
-                expression: //ComprobanteCancelar40/licencia/text()
-        - setHeader:
-            id: setHeader-e5b12
-            description: xpath
-            name: facturaIdValue
-            expression:
-              xpath:
-                id: xpath-b5e4
-                expression: //ComprobanteCancelar40/facturaId/text()
-        - setHeader:
-            id: setHeader-dd4f
-            description: xpath
-            name: MotivoCancelacionValue
-            expression:
-              xpath:
-                id: xpath-e559
-                expression: //ComprobanteCancelar40/MotivoCancelacion/text()
-        - setHeader:
-            id: setHeader-dcd1
-            description: xpath
-            name: FolioSustitucionValue
-            expression:
-              xpath:
-                id: xpath-3350
-                expression: //ComprobanteCancelar40/FolioSustitucion/text()
+        - setHeaders:
+            id: setHeaders-6418
+            description: Headers
+            headers:
+              - id: setHeader-386c
+                name: licenciaValue
+                expression:
+                  xpath:
+                    id: xpath-a28c
+                    expression: //ComprobanteCancelar40/licencia/text()
+              - id: setHeader-23e8
+                name: facturaIdValue
+                expression:
+                  xpath:
+                    id: xpath-eedd
+                    expression: //ComprobanteCancelar40/facturaId/text()
+              - id: setHeader-695e
+                name: MotivoCancelacionValue
+                expression:
+                  xpath:
+                    id: xpath-9ce5
+                    expression: //ComprobanteCancelar40/MotivoCancelacion/text()
+              - id: setHeader-ffd8
+                name: FolioSustitucionValue
+                expression:
+                  xpath:
+                    id: xpath-29bf
+                    expression: //ComprobanteCancelar40/FolioSustitucion/text()
         - setBody:
             id: setBody-54112
             description: SOAP
@@ -228,11 +214,6 @@
             uri: xslt
             parameters:
               resourceUri: classpath:00_Xml_Response.xsl
-        - log:
-            id: log-463612
-            description: LOG
-            message: ${body}
-            loggingLevel: INFO
 - route:
     id: ComprobanteGenerarSAT40
     from:
@@ -241,34 +222,34 @@
       parameters:
         name: ComprobanteGenerarSAT40
       steps:
-        - setHeader:
-            id: setHeader-527d
-            name: licenciaValue
-            expression:
-              xpath:
-                id: xpath-619f
-                expression: //ComprobanteGenerarSAT40/licencia/text()
-        - setHeader:
-            id: setHeader-72b4
-            name: cerBytesValue
-            expression:
-              xpath:
-                id: xpath-2c1e
-                expression: //ComprobanteGenerarSAT40/cerBytes/text()
-        - setHeader:
-            id: setHeader-124b
-            name: keyBytesValue
-            expression:
-              xpath:
-                id: xpath-0d5b
-                expression: //ComprobanteGenerarSAT40/keyBytes/text()
-        - setHeader:
-            id: setHeader-0208
-            name: passBytesValue
-            expression:
-              xpath:
-                id: xpath-15ca
-                expression: //ComprobanteGenerarSAT40/passBytes/text()
+        - setHeaders:
+            id: setHeaders-cc7e
+            description: Headers
+            headers:
+              - id: setHeader-ffa8
+                name: licenciaValue
+                expression:
+                  xpath:
+                    id: xpath-6bd3
+                    expression: //ComprobanteGenerarSAT40/licencia/text()
+              - id: setHeader-cb32
+                name: cerBytesValue
+                expression:
+                  xpath:
+                    id: xpath-0640
+                    expression: //ComprobanteGenerarSAT40/cerBytes/text()
+              - id: setHeader-b536
+                name: keyBytesValue
+                expression:
+                  xpath:
+                    id: xpath-65b9
+                    expression: //ComprobanteGenerarSAT40/keyBytes/text()
+              - id: setHeader-3dea
+                name: passBytesValue
+                expression:
+                  xpath:
+                    id: xpath-5e0a
+                    expression: //ComprobanteGenerarSAT40/passBytes/text()
         - setBody:
             id: setBody-6276
             expression:
