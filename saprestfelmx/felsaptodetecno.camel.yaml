@@ -84,6 +84,10 @@
             uri: xslt
             parameters:
               resourceUri: classpath:00_Xml_Response.xsl
+        - log:
+            id: log-072e
+            message: ${body}
+            loggingLevel: INFO
 - route:
     id: ComprobanteBuscar40
     from:
@@ -143,6 +147,10 @@
             uri: xslt
             parameters:
               resourceUri: classpath:00_Xml_Response.xsl
+        - log:
+            id: log-3cff
+            message: ${body}
+            loggingLevel: INFO
 - route:
     id: ComprobanteCancelar40
     from:
@@ -214,6 +222,10 @@
             uri: xslt
             parameters:
               resourceUri: classpath:00_Xml_Response.xsl
+        - log:
+            id: log-fc96
+            message: ${body}
+            loggingLevel: INFO
 - route:
     id: ComprobanteGenerarSAT40
     from:
@@ -299,3 +311,4 @@
             id: log-aa24
             description: LOG
             message: ${body}
+            loggingLevel: INFO
