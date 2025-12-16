@@ -1,0 +1,351 @@
+- rest:
+    id: rest-bdf3
+    path: /Servicios/Transporte
+    consumes: application/json
+    produces: application/json
+    patch:
+      - id: patch-13d8
+        path: /Confirmar/Actualizacion
+        to: direct:Confirmar_Actualizacion
+    post:
+      - id: post-bdb2
+        path: /Consulta
+        to: direct:ConsultaTransporte
+        consumes: application/json
+        produces: application/json
+      - id: post-5aa3
+        path: /Vincula
+        to: direct:VinculaTransporte
+        consumes: application/json
+        produces: application/json
+      - id: post-9008
+        path: /Desvincular/Entrega
+        to: direct:DesvincularEntrega
+      - id: post-6ea3
+        path: /Entregas/Consultar
+        to: direct:ConsultarEntregas
+      - id: post-3692
+        path: /Visualizar/Detalles
+        to: direct:Visualizar_Detalles
+    put:
+      - id: put-c24c
+        path: /Llegada/Bascula
+        to: direct:LlegadaBascula
+        consumes: application/json
+        produces: application/json
+      - id: put-a927
+        path: /Confirmacion/Entregas
+        to: direct:ConfirmacionEntregas
+        consumes: application/json
+        produces: application/json
+- route:
+    id: ConsultaTransporte
+    from:
+      id: from-ee7f
+      uri: direct
+      parameters:
+        name: ConsultaTransporte
+      steps:
+        - setHeader:
+            id: setHeader-04db
+            name: operation
+            expression:
+              constant:
+                id: constant-fe8c
+                expression: CONSULTA
+        - to:
+            id: to-0dc3
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-ef2d
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: VinculaTransporte
+    from:
+      id: from-3a47
+      uri: direct
+      parameters:
+        name: VinculaTransporte
+      steps:
+        - setHeader:
+            id: setHeader-d0d9
+            name: operation
+            expression:
+              constant:
+                id: constant-888c
+                expression: VINCULA
+        - to:
+            id: to-03ba
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-59e0
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: ConfirmacionEntregas
+    from:
+      id: from-be17
+      uri: direct
+      parameters:
+        name: ConfirmacionEntregas
+      steps:
+        - setHeader:
+            id: setHeader-6a9d
+            name: operation
+            expression:
+              constant:
+                id: constant-94d5
+                expression: CONFIRMACION_ENTREGA
+        - to:
+            id: to-5bb5
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-67b0
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: LlegadaBascula
+    from:
+      id: from-0dbd
+      uri: direct
+      parameters:
+        name: LlegadaBascula
+      steps:
+        - setHeader:
+            id: setHeader-add5
+            name: operation
+            expression:
+              constant:
+                id: constant-6489
+                expression: LLEGADA_BASCULA
+        - to:
+            id: to-8295
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-3887
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: Desvincular Entrega
+    from:
+      id: from-7bee
+      uri: direct
+      parameters:
+        name: DesvincularEntrega
+      steps:
+        - setHeader:
+            id: setHeader-d5c6
+            name: operation
+            expression:
+              constant:
+                id: constant-a337
+                expression: DESVINCULAR_ENTREGA
+        - to:
+            id: to-ab9c
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-824c
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: Consultar Entregas
+    from:
+      id: from-0d16
+      uri: direct
+      parameters:
+        name: ConsultarEntregas
+      steps:
+        - setHeader:
+            id: setHeader-1d63
+            name: operation
+            expression:
+              constant:
+                id: constant-b8dc
+                expression: CONSULTA_ENTREGAS_TRANSPORTE
+        - to:
+            id: to-f935
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-4768
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: Visualizar_Detalles
+    from:
+      id: from-a844
+      uri: direct
+      parameters:
+        name: Visualizar_Detalles
+      steps:
+        - setHeader:
+            id: setHeader-7825
+            name: operation
+            expression:
+              constant:
+                id: constant-bc02
+                expression: CONSULTA_VISUALIZAR_DETALLES
+        - to:
+            id: to-ce28
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-2005
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: Confirmar_Actualizacion
+    from:
+      id: from-4079
+      uri: direct
+      parameters:
+        name: Confirmar_Actualizacion
+      steps:
+        - setHeader:
+            id: setHeader-70fa
+            name: operation
+            expression:
+              constant:
+                id: constant-5d58
+                expression: CONFIRMAR_ACTUALIZACION
+        - to:
+            id: to-b262
+            uri: xj
+            parameters:
+              resourceUri: classpath:01_RequestServices.xsl
+              transformDirection: JSON2XML
+        - to:
+            id: to-03bd
+            uri: direct
+            parameters:
+              name: Sap
+- route:
+    id: Sap
+    nodePrefixId: route-968
+    from:
+      id: Invocar_Sap
+      uri: direct
+      parameters:
+        name: Sap
+      steps:
+        - log:
+            id: log-c8f7
+            message: "CONSULTA: ${date:now-6h:yyyy-MM-dd HH:mm:ss}"
+            loggingLevel: INFO
+        - setHeader:
+            id: setHeader-abc5
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-4a39
+                expression: text/xml; charset=utf-8
+        - removeHeaders:
+            id: removeHeaders-70f9
+            pattern: CamelHttp*
+        - doTry:
+            id: doTry-8cb2
+            doCatch:
+              - id: doCatch-943e
+                exception:
+                  - org.apache.camel.http.base.HttpOperationFailedException
+                steps:
+                  - setHeaders:
+                      id: setHeaders-0eef
+                      headers:
+                        - id: setHeader-936f
+                          name: CamelHttpResponseCode
+                          expression:
+                            constant:
+                              id: constant-c587
+                              expression: "400"
+                        - id: setHeader-785f
+                          name: Content-Type
+                          expression:
+                            constant:
+                              id: constant-1d85
+                              expression: application/json
+                  - setBody:
+                      id: setBody-9e0d
+                      expression:
+                        simple:
+                          id: simple-5c51
+                          expression: >-
+                            {"message":"Bad
+                            Request","timestamp":"${date:now-6h:yyyy/MM/dd:HH-mm-ss}"}
+                  - to:
+                      id: to-ddcb
+                      uri: direct
+                      parameters:
+                        name: Notificacion
+            steps:
+              - to:
+                  id: to-29b8
+                  description: "Secured HTTP "
+                  uri: kamelet:http-secured-sink
+                  parameters:
+                    url: "{{sap.qlt.baseUri}}"
+                    method: POST
+                    authMethod: Basic
+                    authUsername: "{{sap.soap.username}}"
+                    authPassword: "{{sap.soap.password}}"
+              - to:
+                  id: to-f783
+                  uri: xj
+                  parameters:
+                    transformDirection: XML2JSON
+                    resourceUri: classpath:99_ResponseServices.xsl
+              - log:
+                  id: log-8380
+                  message: "RESPUESTA: ${date:now-6h:yyyy-MM-dd HH:mm:ss}"
+                  loggingLevel: INFO
+- route:
+    id: SMTP
+    nodePrefixId: route-e52
+    from:
+      id: from-1c95
+      uri: direct
+      parameters:
+        name: Notificacion
+      steps:
+        - log:
+            id: log-900e
+            message: "ERROR: ${body}--${date:now-6h:yyyy-MM-dd HH:mm:ss}"
+            loggingLevel: ERROR
+        - to:
+            id: to-4d70
+            uri: smtp
+            parameters:
+              port: "{{camel.component.smtp.port}}"
+              from: "{{integration.email.from}}"
+              to: "{{integration.email.to}}"
+              host: "{{camel.component.smtp.host}}"
+              cc: "{{integration.email.Cc}}"
+        - stop:
+            id: stop-5d1a

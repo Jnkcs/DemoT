@@ -1,0 +1,8 @@
+services:
+  t-02-consulta-de-transportes-sap-ql:
+    image: t-02-consulta-de-transportes-sap-ql
+    restart: always
+    ports:
+      - "8111:8080"
+    networks:
+      - karavan
