@@ -1,0 +1,8 @@
+services:
+  t-00-creacion-de-clientes-en-sap-ql:
+    image: t-00-creacion-de-clientes-en-sap-ql
+    restart: always
+    ports:
+      - "8110:8080"
+    networks:
+      - karavan

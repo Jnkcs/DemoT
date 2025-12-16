@@ -1,0 +1,65 @@
+- rest:
+    id: rest-68da
+    post:
+      - id: post-0d39
+        path: /crear/cliente
+        to: direct:CrearCliente
+- route:
+    id: CrearCliente
+    from:
+      id: from-e069
+      uri: direct
+      parameters:
+        name: CrearCliente
+      steps:
+        - log:
+            id: log-79f6
+            description: DMA
+            message: Request ${date:now-6h:yyyy-MM-dd HH:mm:ss}
+            loggingLevel: INFO
+        - to:
+            id: to-5d4a
+            description: Transform
+            uri: xj
+            parameters:
+              resourceUri: classpath:request.xsl
+              transformDirection: JSON2XML
+        - setHeader:
+            id: setHeader-c45d
+            description: Constant
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-7f33
+                expression: text/xml; charset=utf-8
+        - removeHeaders:
+            id: removeHeaders-00c7
+            description: Headers
+            pattern: CamelHttp*
+        - log:
+            id: log-e126
+            message: ${body}
+            loggingLevel: INFO
+        - to:
+            id: to-2e2b
+            description: Secured HTTP
+            disabled: false
+            uri: kamelet:http-secured-sink
+            parameters:
+              url: "{{sap.qlt.baseUri}}"
+              method: POST
+              authMethod: Basic
+              authUsername: "{{sap.soap.username}}"
+              authPassword: "{{sap.soap.password}}"
+        - to:
+            id: to-c05e
+            description: "Transform "
+            uri: xj
+            parameters:
+              resourceUri: classpath:response.xsl
+              transformDirection: XML2JSON
+        - log:
+            id: log-a9f7
+            description: DMA
+            message: Response ${date:now-6h:yyyy-MM-dd HH:mm:ss}
+            loggingLevel: INFO
