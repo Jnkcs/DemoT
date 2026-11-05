@@ -1,0 +1,19 @@
+- route:
+    id: route-desbloquear-usuario-api
+    description: Desbloquear
+    from:
+      id: from4a0f
+      uri: platform-http
+      parameters:
+        path: /api/v1/ldap/usuario/desbloquear
+        httpMethodRestrict: POST
+      steps:
+        - log:
+            id: log09ae
+            message: "\"Iniciando desbloqueo: \" + \\n${body}"
+            loggingLevel: INFO
+        - to:
+            id: toc3f1
+            uri: direct
+            parameters:
+              name: headersDesbloquear

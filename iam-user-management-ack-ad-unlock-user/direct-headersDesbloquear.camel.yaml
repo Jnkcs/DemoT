@@ -1,0 +1,55 @@
+- route:
+    id: route-direct-headers-desbloquear
+    description: Direct Headers Desbloquear
+    nodePrefixId: route-direct-headers-desbloquear
+    from:
+      id: fromc3da
+      uri: direct
+      parameters:
+        name: headersDesbloquear
+      steps:
+        - unmarshal:
+            id: unmarshal49a0
+            json:
+              id: jsoneeb8
+              prettyPrint: true
+        - setHeader:
+            id: setHeaderdb56
+            name: targetUser
+            expression:
+              groovy:
+                id: groovybab2
+                expression: "request.body.usuario ?: request.body.username"
+        - setProperty:
+            id: setProperty0c26
+            name: ldapUrl
+            expression:
+              simple:
+                id: simple347c
+                expression: "{{ldap.url}}"
+        - setProperty:
+            id: setPropertyed41
+            name: ldapBaseDn
+            expression:
+              simple:
+                id: simplefb6a
+                expression: "{{ldap.baseDn}}"
+        - setProperty:
+            id: setPropertye3b3
+            name: ldapPrincipal
+            expression:
+              simple:
+                id: simple934b
+                expression: "{{ldap.principal}}"
+        - setProperty:
+            id: setPropertyc8a7
+            name: ldapCredentials
+            expression:
+              simple:
+                id: simplee34c
+                expression: "{{ldap.credentials}}"
+        - to:
+            id: to01ff
+            uri: direct
+            parameters:
+              name: procesoDesbloquear

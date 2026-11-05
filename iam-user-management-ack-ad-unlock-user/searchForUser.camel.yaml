@@ -1,0 +1,44 @@
+- route:
+    id: route8e95
+    description: Consultar
+    nodePrefixId: routedcb
+    from:
+      id: frome897
+      description: HTTP
+      uri: platform-http
+      parameters:
+        path: /api/v1/ldap/usuario
+        httpMethodRestrict: POST
+      steps:
+        - log:
+            id: log-inicio-consulta
+            message: "\"Iniciando consulta de usuario: \" + \\n${body}"
+            loggingLevel: INFO
+        - unmarshal:
+            id: unmarshal-json-consulta
+            description: Json
+            json:
+              id: json-unmarshal-consulta
+              prettyPrint: true
+        - bean:
+            id: bean-buscar-usuario
+            method: ejecutar
+            beanType: services.BuscarUsuarioService
+        - setHeader:
+            id: header-content-type-consulta
+            description: Content-Type
+            name: Content-Type
+            expression:
+              constant:
+                id: const-json-type
+                expression: application/json
+        - marshal:
+            id: marshal-json-consulta
+            description: Json
+            json:
+              id: json-marshal-consulta
+              prettyPrint: true
+        - log:
+            id: log-fin-consulta
+            message: "\"Respuesta de consulta: \" + \\n${body}"
+            loggingLevel: INFO

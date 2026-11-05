@@ -1,0 +1,55 @@
+- route:
+    id: route-direct-proceso-desbloquear
+    description: procesoDesbloquear
+    nodePrefixId: route-direct-proceso-desbloquear
+    from:
+      id: from0037
+      uri: direct
+      parameters:
+        name: procesoDesbloquear
+      steps:
+        - choice:
+            id: choice0bcd
+            when:
+              - id: whend098
+                expression:
+                  simple:
+                    id: simple768b
+                    expression: ${headers.targetUser} == null || ${headers.targetUser.trim()} == ''
+                steps:
+                  - setHeader:
+                      id: setHeaderdf89
+                      description: sh.responseCode
+                      name: CamelHttpResponseCode
+                      expression:
+                        constant:
+                          id: constantc7fb
+                          expression: "400"
+                  - setHeader:
+                      id: setHeaderec37
+                      description: sh.content-Type
+                      name: Content-Type
+                      expression:
+                        constant:
+                          id: constantbf92
+                          expression: application/json
+                  - setBody:
+                      id: setBody4dbb
+                      expression:
+                        simple:
+                          id: simple73b8
+                          expression: "{\"exito\": false, \"mensaje\": \"El campo usuario es obligatorio.\"}"
+                  - stop:
+                      id: stopc042
+            otherwise:
+              id: otherwise33bc
+              steps:
+                - bean:
+                    id: beandb9b
+                    method: ejecutar
+                    beanType: services.DesbloquearUsuarioService
+                - to:
+                    id: to5f59
+                    uri: direct
+                    parameters:
+                      name: respuestaDesbloquear
