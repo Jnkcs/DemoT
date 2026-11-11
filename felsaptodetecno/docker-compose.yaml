@@ -1,9 +1,0 @@
-services:
-  felsaptodetecno:
-    container_name: felsaptodetecno
-    image: localhost:5555/karavan/felsaptodetecno:latest
-    networks:
-    - karavan
-    ports:
-    - 8101:8080
-    restart: always
