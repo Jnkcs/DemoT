@@ -1,8 +1,0 @@
-services:
-  rutaoptimizada:
-    image: rutaoptimizada
-    restart: always
-    ports:
-      - "8098:8080"
-    networks:
-      - karavan
