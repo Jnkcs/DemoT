@@ -1,0 +1,112 @@
+- route:
+    id: route-fel-gt-exponer-wsdl
+    from:
+      id: from2ff3
+      uri: platform-http
+      parameters:
+        path: /fel_guatemala.wsdl
+      steps:
+        - setHeader:
+            id: setHeader714b
+            name: Content-Type
+            expression:
+              constant:
+                id: constant8f31
+                expression: application/xml
+        - setBody:
+            id: setBody47b0
+            expression:
+              simple:
+                id: simplec1fb
+                expression: resource:classpath:fel_guatemala.wsdl
+- route:
+    id: route-fel-gt-services
+    from:
+      id: from81fd
+      uri: platform-http
+      parameters:
+        path: /services/facturaElectronicaService
+      steps:
+        - log:
+            id: log137d
+            message: "-----> FEL-GT SOAPAction: ${header.SOAPAction} | Body: ${body}"
+            loggingLevel: INFO
+        - choice:
+            id: choice3dd9
+            when:
+              - id: when212d
+                expression:
+                  simple:
+                    id: simple71fa
+                    expression: ${header.SOAPAction} contains 'EmitirFEL' || ${body} contains 'EmitirFELRequest'
+                steps:
+                  - to:
+                      id: toea41
+                      uri: direct
+                      parameters:
+                        name: fel-gt-emitir
+              - id: when30ce
+                expression:
+                  simple:
+                    id: simpleb1e7
+                    expression: ${header.SOAPAction} contains 'AnularFEL' || ${body} contains 'AnularFELRequest'
+                steps:
+                  - to:
+                      id: to7d83
+                      uri: direct
+                      parameters:
+                        name: fel-gt-anular
+            otherwise:
+              id: otherwise9898
+              steps:
+                - setHeader:
+                    id: setHeader3792
+                    name: Content-Type
+                    expression:
+                      constant:
+                        id: constant835a
+                        expression: application/xml
+                - setBody:
+                    id: setBody03ca
+                    expression:
+                      constant:
+                        id: constant0c7f
+                        expression: >-
+                          <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><Fault><faultstring>Operacion no reconocida. Use EmitirFEL o
+                          AnularFEL</faultstring></Fault></soap:Body></soap:Envelope>
+- route:
+    id: route-fel-gt-emitir
+    from:
+      id: from091c
+      uri: direct
+      parameters:
+        name: fel-gt-emitir
+      steps:
+        - log:
+            id: logeae9
+            message: "-----> EMITIR FEL - NitEmisor: ${body} | Receptor: ${body}"
+            loggingLevel: INFO
+        - setBody:
+            id: setBodya9bf
+            expression:
+              simple:
+                id: simplee296
+                expression: <EmitirFELResponse><Exito>true</Exito><Mensaje>Factura emitida - MOCK</Mensaje></EmitirFELResponse>
+- route:
+    id: route-fel-gt-anular
+    from:
+      id: from8b7d
+      uri: direct
+      parameters:
+        name: fel-gt-anular
+      steps:
+        - log:
+            id: log04bf
+            message: "-----> ANULAR FEL - UUID: ${body}"
+            loggingLevel: INFO
+        - setBody:
+            id: setBody8dcc
+            expression:
+              simple:
+                id: simpleaf11
+                expression: <AnularFELResponse><Exito>true</Exito><Mensaje>Factura anulada - MOCK</Mensaje></AnularFELResponse>

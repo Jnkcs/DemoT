@@ -1,0 +1,8 @@
+services:
+  fel-gtm-emitir-factura-electronica:
+    image: fel-gtm-emitir-factura-electronica
+    restart: always
+    ports:
+      - "8083:8080"
+    networks:
+      - karavan

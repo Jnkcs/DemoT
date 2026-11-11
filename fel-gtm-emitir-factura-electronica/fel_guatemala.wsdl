@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://fel.sat.gob.gt/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://fel.sat.gob.gt/" name="FELGuatemalaService">
+	<types>
+		<xsd:schema targetNamespace="http://fel.sat.gob.gt/" elementFormDefault="qualified">
+			<xsd:complexType name="EmisorType">
+				<xsd:sequence>
+					<xsd:element name="NitEmisor" type="xsd:string"/>
+					<xsd:element name="NombreEmisor" type="xsd:string"/>
+					<xsd:element name="DireccionEmisor" type="xsd:string"/>
+					<xsd:element name="CodigoEstablecimiento" type="xsd:string"/>
+					<xsd:element name="NombreComercial" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ReceptorType">
+				<xsd:sequence>
+					<xsd:element name="NitReceptor" type="xsd:string"/>
+					<xsd:element name="NombreReceptor" type="xsd:string"/>
+					<xsd:element name="DireccionReceptor" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="CorreoReceptor" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ItemType">
+				<xsd:sequence>
+					<xsd:element name="Descripcion" type="xsd:string"/>
+					<xsd:element name="Cantidad" type="xsd:decimal"/>
+					<xsd:element name="UnidadMedida" type="xsd:string"/>
+					<xsd:element name="PrecioUnitario" type="xsd:decimal"/>
+					<xsd:element name="Descuento" type="xsd:decimal" minOccurs="0"/>
+					<xsd:element name="MontoTotal" type="xsd:decimal"/>
+					<xsd:element name="CodigoImpuesto" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="FacturaType">
+				<xsd:sequence>
+					<xsd:element name="TipoDocumento" type="xsd:string"/>
+					<xsd:element name="FechaEmision" type="xsd:dateTime"/>
+					<xsd:element name="Moneda" type="xsd:string"/>
+					<xsd:element name="Emisor" type="tns:EmisorType"/>
+					<xsd:element name="Receptor" type="tns:ReceptorType"/>
+					<xsd:element name="Items" type="tns:ItemType" maxOccurs="unbounded"/>
+					<xsd:element name="SubTotal" type="xsd:decimal"/>
+					<xsd:element name="TotalIVA" type="xsd:decimal"/>
+					<xsd:element name="Total" type="xsd:decimal"/>
+					<xsd:element name="Observaciones" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:element name="EmitirFELRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Usuario" type="xsd:string"/>
+						<xsd:element name="Token" type="xsd:string"/>
+						<xsd:element name="Factura" type="tns:FacturaType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="EmitirFELResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Exito" type="xsd:boolean"/>
+						<xsd:element name="UUID" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="NumeroAutorizacion" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="FechaCertificacion" type="xsd:dateTime" minOccurs="0"/>
+						<xsd:element name="Mensaje" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="XmlCertificado" type="xsd:string" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AnularFELRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Usuario" type="xsd:string"/>
+						<xsd:element name="Token" type="xsd:string"/>
+						<xsd:element name="UUID" type="xsd:string"/>
+						<xsd:element name="Motivo" type="xsd:string"/>
+						<xsd:element name="NitEmisor" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="AnularFELResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Exito" type="xsd:boolean"/>
+						<xsd:element name="Mensaje" type="xsd:string" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</types>
+	<message name="EmitirFELInput">
+		<part name="parameters" element="tns:EmitirFELRequest"/>
+	</message>
+	<message name="EmitirFELOutput">
+		<part name="parameters" element="tns:EmitirFELResponse"/>
+	</message>
+	<message name="AnularFELInput">
+		<part name="parameters" element="tns:AnularFELRequest"/>
+	</message>
+	<message name="AnularFELOutput">
+		<part name="parameters" element="tns:AnularFELResponse"/>
+	</message>
+	<portType name="FELPortType">
+		<operation name="EmitirFEL">
+			<input message="tns:EmitirFELInput"/>
+			<output message="tns:EmitirFELOutput"/>
+		</operation>
+		<operation name="AnularFEL">
+			<input message="tns:AnularFELInput"/>
+			<output message="tns:AnularFELOutput"/>
+		</operation>
+	</portType>
+	<binding name="FELBinding" type="tns:FELPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="EmitirFEL">
+			<soap:operation soapAction="http://fel.sat.gob.gt/EmitirFEL"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="AnularFEL">
+			<soap:operation soapAction="http://fel.sat.gob.gt/AnularFEL"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="FELGuatemalaService">
+		<port name="FELPort" binding="tns:FELBinding">
+			<!-- ANTES: https://fel.sat.gob.gt/ws/FELService -->
+			<!-- AHORA: Ruta de Karavan donde está la bifurcación choice -->
+			<soap:address location="http://192.168.133.131:8083/services/facturaElectronicaService"/>
+		</port>
+	</service>
+</definitions>
