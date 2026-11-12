@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://sat.gob.mx" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://sat.gob.mx" name="CFDIMexicoService">
+	<types>
+		<xsd:schema targetNamespace="http://sat.gob.mx" elementFormDefault="qualified">
+			<xsd:complexType name="EmisorType">
+				<xsd:sequence>
+					<xsd:element name="RfcEmisor" type="xsd:string"/>
+					<xsd:element name="NombreEmisor" type="xsd:string"/>
+					<xsd:element name="RegimenFiscal" type="xsd:string"/>
+					<xsd:element name="LugarExpedicion" type="xsd:string"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ReceptorType">
+				<xsd:sequence>
+					<xsd:element name="RfcReceptor" type="xsd:string"/>
+					<xsd:element name="NombreReceptor" type="xsd:string"/>
+					<xsd:element name="DomicilioFiscalReceptor" type="xsd:string"/>
+					<xsd:element name="RegimenFiscalReceptor" type="xsd:string"/>
+					<xsd:element name="UsoCFDI" type="xsd:string"/>
+					<xsd:element name="CorreoReceptor" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ConceptoType">
+				<xsd:sequence>
+					<xsd:element name="ClaveProdServ" type="xsd:string"/>
+					<xsd:element name="Descripcion" type="xsd:string"/>
+					<xsd:element name="Cantidad" type="xsd:decimal"/>
+					<xsd:element name="ClaveUnidad" type="xsd:string"/>
+					<xsd:element name="ValorUnitario" type="xsd:decimal"/>
+					<xsd:element name="Descuento" type="xsd:decimal" minOccurs="0"/>
+					<xsd:element name="Importe" type="xsd:decimal"/>
+					<xsd:element name="ObjetoImp" type="xsd:string"/>
+					<xsd:element name="TasaIVA" type="xsd:decimal"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<xsd:complexType name="ComprobanteType">
+				<xsd:sequence>
+					<xsd:element name="TipoDeComprobante" type="xsd:string"/>
+					<xsd:element name="Fecha" type="xsd:dateTime"/>
+					<xsd:element name="Moneda" type="xsd:string"/>
+					<xsd:element name="FormaPago" type="xsd:string"/>
+					<xsd:element name="MetodoPago" type="xsd:string"/>
+					<xsd:element name="Exportacion" type="xsd:string"/>
+					<xsd:element name="Emisor" type="tns:EmisorType"/>
+					<xsd:element name="Receptor" type="tns:ReceptorType"/>
+					<xsd:element name="Conceptos" type="tns:ConceptoType" maxOccurs="unbounded"/>
+					<xsd:element name="SubTotal" type="xsd:decimal"/>
+					<xsd:element name="TotalImpuestosTrasladados" type="xsd:decimal"/>
+					<xsd:element name="Total" type="xsd:decimal"/>
+					<xsd:element name="Observaciones" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:complexType>
+			<!-- Petición y Respuesta de Timbrado (Emisión) -->
+			<xsd:element name="EmitirCFDIRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Usuario" type="xsd:string"/>
+						<xsd:element name="Token" type="xsd:string"/>
+						<xsd:element name="Comprobante" type="tns:ComprobanteType"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="EmitirCFDIResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Exito" type="xsd:boolean"/>
+						<xsd:element name="UUID" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="NoCertificadoSAT" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="FechaTimbrado" type="xsd:dateTime" minOccurs="0"/>
+						<xsd:element name="SelloCFD" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="Mensaje" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="XmlTimbrado" type="xsd:string" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<!-- Petición y Respuesta de Cancelación -->
+			<xsd:element name="CancelarCFDIRequest">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Usuario" type="xsd:string"/>
+						<xsd:element name="Token" type="xsd:string"/>
+						<xsd:element name="UUID" type="xsd:string"/>
+						<xsd:element name="Motivo" type="xsd:string"/>
+						<xsd:element name="FolioSustitucion" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="RfcEmisor" type="xsd:string"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="CancelarCFDIResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Exito" type="xsd:boolean"/>
+						<xsd:element name="AcuseCancelacion" type="xsd:string" minOccurs="0"/>
+						<xsd:element name="Mensaje" type="xsd:string" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</types>
+	<message name="EmitirCFDIInput">
+		<part name="parameters" element="tns:EmitirCFDIRequest"/>
+	</message>
+	<message name="EmitirCFDIOutput">
+		<part name="parameters" element="tns:EmitirCFDIResponse"/>
+	</message>
+	<message name="CancelarCFDIInput">
+		<part name="parameters" element="tns:CancelarCFDIRequest"/>
+	</message>
+	<message name="CancelarCFDIOutput">
+		<part name="parameters" element="tns:CancelarCFDIResponse"/>
+	</message>
+	<portType name="CFDIPortType">
+		<operation name="EmitirCFDI">
+			<input message="tns:EmitirCFDIInput"/>
+			<output message="tns:EmitirCFDIOutput"/>
+		</operation>
+		<operation name="CancelarCFDI">
+			<input message="tns:CancelarCFDIInput"/>
+			<output message="tns:CancelarCFDIOutput"/>
+		</operation>
+	</portType>
+	<binding name="CFDIBinding" type="tns:CFDIPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="EmitirCFDI">
+			<soap:operation soapAction="http://sat.gob.mxEmitirCFDI"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+		<operation name="CancelarCFDI">
+			<soap:operation soapAction="http://sat.gob.mxCancelarCFDI"/>
+			<input>
+				<soap:body use="literal"/>
+			</input>
+			<output>
+				<soap:body use="literal"/>
+			</output>
+		</operation>
+	</binding>
+	<service name="CFDIMexicoService">
+		<port name="CFDIPort" binding="tns:CFDIBinding">
+			<!-- Ruta local en puerto 8088 -->
+			<soap:address location="http://192.168.133.131:8088/services/cfdiMexicoService"/>
+		</port>
+	</service>
+</definitions>

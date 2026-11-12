@@ -1,0 +1,133 @@
+- route:
+    id: route-cfdi-mx-exponer-wsdl
+    from:
+      id: from-mx-wsdl
+      uri: platform-http
+      parameters:
+        path: /fel_mexico.wsdl
+      steps:
+        - setHeader:
+            id: setHeader-mx-wsdl
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-mx-wsdl-ct
+                expression: application/xml
+        - setBody:
+            id: setBody-mx-wsdl
+            expression:
+              simple:
+                id: simple-mx-wsdl-res
+                expression: resource:classpath:fel_mexico.wsdl
+- route:
+    id: route-cfdi-mx-services
+    from:
+      id: from-mx-service
+      uri: platform-http
+      parameters:
+        path: /services/cfdiMexicoService
+      steps:
+        - log:
+            id: log-mx-in
+            message: "-----> CFDI-MX SOAPAction: ${header.SOAPAction} | Body: ${body}"
+            loggingLevel: INFO
+        - choice:
+            id: choice-mx-ops
+            when:
+              - id: when-mx-emitir
+                expression:
+                  simple:
+                    id: simple-mx-emitir
+                    expression: ${header.SOAPAction} contains 'EmitirCFDI' || ${body} contains 'EmitirCFDIRequest'
+                steps:
+                  - to:
+                      id: to-mx-emitir
+                      uri: direct
+                      parameters:
+                        name: cfdi-mx-emitir
+              - id: when-mx-cancelar
+                expression:
+                  simple:
+                    id: simple-mx-cancelar
+                    expression: ${header.SOAPAction} contains 'CancelarCFDI' || ${body} contains 'CancelarCFDIRequest'
+                steps:
+                  - to:
+                      id: to-mx-cancelar
+                      uri: direct
+                      parameters:
+                        name: cfdi-mx-cancelar
+            otherwise:
+              id: otherwise-mx-fault
+              steps:
+                - setHeader:
+                    id: setHeader-mx-fault
+                    name: Content-Type
+                    expression:
+                      constant:
+                        id: constant-mx-fault-ct
+                        expression: application/xml
+                - setBody:
+                    id: setBody-mx-fault
+                    expression:
+                      constant:
+                        id: constant-mx-fault-msg
+                        expression: >-
+                          <soap:Envelope
+                          xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><soap:Fault><faultcode>soap:Client</faultcode><faultstring>Operacion no
+                          reconocida. Use EmitirCFDI o CancelarCFDI</faultstring></soap:Fault></soap:Body></soap:Envelope>
+- route:
+    id: route-cfdi-mx-emitir
+    from:
+      id: from-mx-emitir
+      uri: direct
+      parameters:
+        name: cfdi-mx-emitir
+      steps:
+        - log:
+            id: log-mx-emitir
+            message: "-----> EMITIR CFDI MX - Request: ${body}"
+            loggingLevel: INFO
+        - setHeader:
+            id: setHeader-mx-emitir-ct
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-mx-emitir-ct
+                expression: text/xml; charset=utf-8
+        - setBody:
+            id: setBody-mx-emitir
+            expression:
+              simple:
+                id: simple-mx-emitir-resp
+                expression: >-
+                  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:tns="http://sat.gob.mx"><soap:Body><tns:EmitirCFDIResponse><tns:Exito>true</tns:Exito><tns:UUID>550e8400-e29b-41d4-a716-446655440000</tns:UUID><tns:Mensaje>CFDI
+                  4.0 timbrado correctamente - MOCK</tns:Mensaje></tns:EmitirCFDIResponse></soap:Body></soap:Envelope>
+- route:
+    id: route-cfdi-mx-cancelar
+    from:
+      id: from-mx-cancelar
+      uri: direct
+      parameters:
+        name: cfdi-mx-cancelar
+      steps:
+        - log:
+            id: log-mx-cancelar
+            message: "-----> CANCELAR CFDI MX - Request: ${body}"
+            loggingLevel: INFO
+        - setHeader:
+            id: setHeader-mx-cancelar-ct
+            name: Content-Type
+            expression:
+              constant:
+                id: constant-mx-cancelar-ct
+                expression: text/xml; charset=utf-8
+        - setBody:
+            id: setBody-mx-cancelar
+            expression:
+              simple:
+                id: simple-mx-cancelar-resp
+                expression: >-
+                  <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:tns="http://sat.gob.mx"><soap:Body><tns:CancelarCFDIResponse><tns:Exito>true</tns:Exito><tns:Mensaje>CFDI cancelado correctamente -
+                  MOCK</tns:Mensaje></tns:CancelarCFDIResponse></soap:Body></soap:Envelope>
