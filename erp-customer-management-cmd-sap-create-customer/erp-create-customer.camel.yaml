@@ -1,0 +1,22 @@
+- route:
+    id: route8e95
+    description: Consultar
+    nodePrefixId: routedcb
+    from:
+      id: frome897
+      description: HTTP
+      uri: platform-http
+      parameters:
+        path: /api/v1/erp/customer-management
+        httpMethodRestrict: POST
+      steps:
+        - log:
+            id: log-inicio-consulta
+            message: "\"Iniciando consulta de usuario: \" + \\n${body}"
+            loggingLevel: INFO
+        - setBody:
+            id: setBody4956
+            expression:
+              simple:
+                id: simplecb8e
+                expression: "{\r\n    \"serviceName\": \"erp-customer-management-create-customer\",\r\n    \"correlationId\": \"txn-20261112-001\",\r\n    \"timestamp\": \"${date:now-6h:yyyy-MM-dd HH:mm:ss}\",\r\n    \"status\": \"SUCCESS\",\r\n    \"code\": 201,\r\n    \"message\": \"Cliente creado correctamente\",\r\n    \"data\": {\r\n        \"customerId\": \"0010009999\",\r\n        \"businessPartnerId\": \"0010009999\"\r\n    }\r\n}"

@@ -1,0 +1,8 @@
+services:
+  erp-customer-management-cmd-sap-create-customer:
+    image: erp-customer-management-cmd-sap-create-customer
+    restart: always
+    ports:
+      - "8107:8080"
+    networks:
+      - karavan
