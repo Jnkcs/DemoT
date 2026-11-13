@@ -133,7 +133,8 @@
 		<port name="FELPort" binding="tns:FELBinding">
 			<!-- ANTES: https://fel.sat.gob.gt/ws/FELService -->
 			<!-- AHORA: Ruta de Karavan donde está la bifurcación choice -->
-			<soap:address location="http://192.168.133.131:8083/services/facturaElectronicaService"/>
+			<!-- <soap:address location="http://192.168.133.131:8083/services/facturaElectronicaService"/> -->
+			<soap:address location="https://192.168.133.131:8443/services/facturaElectronicaService"/>
 		</port>
 	</service>
 </definitions>
