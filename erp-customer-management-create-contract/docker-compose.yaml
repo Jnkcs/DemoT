@@ -1,0 +1,8 @@
+services:
+  erp-customer-management-create-contract:
+    image: erp-customer-management-create-contract
+    restart: always
+    ports:
+      - "8293:8080"
+    networks:
+      - karavan

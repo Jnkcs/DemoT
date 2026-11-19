@@ -1,0 +1,24 @@
+- route:
+    id: route8e95
+    description: Consultar
+    nodePrefixId: routedcb
+    from:
+      id: frome897
+      description: HTTP
+      uri: platform-http
+      parameters:
+        path: /api/v1/erp/create-contract
+        httpMethodRestrict: POST
+      steps:
+        - log:
+            id: log-inicio-consulta
+            message: |-
+              "Iniciando creación de contrato: " + 
+              ${body}
+            loggingLevel: INFO
+        - setBody:
+            id: setBody4956
+            expression:
+              simple:
+                id: simplecb8e
+                expression: "{\r\n    \"serviceName\": \"erp-contract-management-create-contract\",\r\n    \"correlationId\": \"txn-20261119-002\",\r\n    \"timestamp\": \"${date:now-6h:yyyy-MM-dd HH:mm:ss}\",\r\n    \"status\": \"SUCCESS\",\r\n    \"code\": 201,\r\n    \"message\": \"Contrato creado correctamente\",\r\n    \"data\": {\r\n        \"contractId\": \"0040008888\",\r\n        \"contractNumber\": \"CTR-2026-8888\"\r\n    }\r\n}"
