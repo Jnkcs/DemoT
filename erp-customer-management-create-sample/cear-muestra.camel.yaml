@@ -1,0 +1,24 @@
+- route:
+    id: route8e95
+    description: Consultar
+    nodePrefixId: routedcb
+    from:
+      id: frome897
+      description: HTTP
+      uri: platform-http
+      parameters:
+        path: /api/v1/erp/create-sample
+        httpMethodRestrict: POST
+      steps:
+        - log:
+            id: log-inicio-consulta
+            message: |-
+              "Iniciando creación de muestra: " + 
+              ${body}
+            loggingLevel: INFO
+        - setBody:
+            id: setBody4956
+            expression:
+              simple:
+                id: simplecb8e
+                expression: "{\r\n    \"serviceName\": \"erp-sample-management-create-sample\",\r\n    \"correlationId\": \"txn-20261119-001\",\r\n    \"timestamp\": \"${date:now-6h:yyyy-MM-dd HH:mm:ss}\",\r\n    \"status\": \"SUCCESS\",\r\n    \"code\": 201,\r\n    \"message\": \"Muestra de ADN creada correctamente\",\r\n    \"data\": {\r\n        \"sampleId\": \"0020005555\",\r\n        \"barcode\": \"ADN-0020005555\"\r\n    }\r\n}"

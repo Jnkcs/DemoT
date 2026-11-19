@@ -1,0 +1,8 @@
+services:
+  erp-customer-management-create-sample:
+    image: erp-customer-management-create-sample
+    restart: always
+    ports:
+      - "8294:8080"
+    networks:
+      - karavan
